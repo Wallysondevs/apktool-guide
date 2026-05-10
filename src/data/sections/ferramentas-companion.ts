@@ -7,7 +7,7 @@ export const chapters: Chapter[] = [
     title: "JADX: Decompilando para Java Legível",
     difficulty: "intermediario",
     subtitle: "A ponte entre o bytecode e a lógica humana",
-    intro: "Enquanto o ApkTool é a ferramenta definitiva para modificação (o 'bisturi'), o JADX é o 'microscópio' de alta resolução da engenharia reversa Android. A grande dificuldade do ApkTool é que ele nos entrega o código em Smali — uma representação textual do bytecode que, embora precisa, é extremamente difícil de ser lida e compreendida por humanos em larga escala. O JADX resolve esse problema ao realizar a decompilação direta dos arquivos DEX para código Java quase original. Historicamente, ele se tornou o sucessor espiritual de ferramentas como o dex2jar, por oferecer uma interface gráfica (GUI) integrada e poderosa. O que acontece internamente é fascinante: o JADX analisa o fluxo de controle, recupera nomes de variáveis (quando não ofuscadas) e reconstrói estruturas complexas como loops 'try-catch' e classes anônimas. Para um modder, o workflow ideal não é escolher entre um ou outro, mas usar ambos em conjunto. Você usa o JADX para entender 'onde' e 'como' a lógica do aplicativo funciona, identifica os métodos de interesse e, em seguida, vai ao Smali gerado pelo ApkTool para realizar a alteração cirúrgica. Sem o JADX, você estaria tateando no escuro; com ele, você tem um mapa detalhado da inteligência do aplicativo.",
+    intro: "Enquanto o ApkTool é a ferramenta definitiva para modificação (o 'bisturi'), o JADX é o 'microscópio' de alta resolução da engenharia reversa Android. A grande dificuldade do ApkTool é que ele nos entrega o código em Smali — uma representação textual do bytecode que, embora precisa, é extremamente difícil de ser lida e compreendida por humanos em larga escala. O JADX resolve esse problema ao realizar a decompilação direta dos arquivos DEX para código Java quase original. Historicamente, ele se tornou o sucessor espiritual de ferramentas como o dex2jar, por oferecer uma interface gráfica (GUI) integrada e poderosa. O que acontece internamente é fascinante: o JADX analisa o fluxo de controle, recupera nomes de variáveis (quando não ofuscadas) e reconstrói estruturas complexas como loops 'try-catch' e classes anônimas. Para um modder, o workflow ideal não é escolher entre um ou outro, mas usar ambos em conjunto. Você usa o JADX para entender 'onde' e 'como' a lógica do aplicativo funciona, identifica os métodos de interesse e, em seguida, vai ao Smali gerado pelo ApkTool para realizar a alteração cirúrgica. Sem o JADX, você estaria tateando no escuro; com ele, você tem um mapa detalhado da inteligência do aplicativo. Pense no JADX como o Waze da engenharia reversa: ele não dirige por você, mas mostra exatamente o caminho que o código percorre, onde estão os 'engarrafamentos' de lógica complexa e quais são os 'atalhos' que os desenvolvedores usaram. Assim como um mecânico brasileiro que abre o capô de um carro importado e precisa primeiro entender o manual antes de meter a mão na massa, o JADX é esse manual traduzido para a sua língua. Ele pega aquele emaranhado de instruções binárias que parecem hieróglifos e transforma em algo que qualquer programador Java consegue ler e interpretar. A ferramenta também é extremamente útil para identificar bibliotecas de terceiros embutidas no aplicativo — como se você estivesse olhando a lista de ingredientes de um produto industrializado para saber exatamente o que tem dentro. Muitos aplicativos utilizam SDKs de analytics, propaganda e rastreamento que ficam completamente visíveis após a decompilação. Além disso, o JADX possui um sistema de busca global que funciona como um 'Google interno' do aplicativo: você digita qualquer string, nome de método ou constante e ele vasculha todas as classes instantaneamente. Isso é particularmente poderoso quando você está procurando onde uma determinada mensagem de erro é gerada ou onde uma chave de API está armazenada. Em termos de performance, o JADX evoluiu muito nos últimos anos, sendo capaz de processar aplicativos com centenas de milhares de classes sem travar, algo que ferramentas anteriores simplesmente não conseguiam fazer de forma confiável.",
     codes: [
       {
         lang: "bash",
@@ -32,6 +32,22 @@ export const chapters: Chapter[] = [
       {
         lang: "bash",
         code: "# Verificando erros de decompilação no log do JADX\njadx-gui meu-app.apk | grep \"ERROR\"\n# Ajuda a identificar partes do código que foram mal reconstruídas"
+      },
+      {
+        lang: "bash",
+        code: "# Decompilando com JADX em modo GUI\njadx-gui app.apk\n# Abre interface gráfica com código Java navegável"
+      },
+      {
+        lang: "bash",
+        code: "# Exportando código Java do JADX via linha de comando\njadx -d output_java/ --deobf app.apk\n# --deobf tenta renomear classes ofuscadas"
+      },
+      {
+        lang: "bash",
+        code: "# Buscando strings específicas no output do JADX\ngrep -rn 'api_key\\|secret\\|password' output_java/\n# Mais fácil de ler que buscar no Smali"
+      },
+      {
+        lang: "bash",
+        code: "# Usando JADX para gerar Gradle project importável\njadx -e -d android_project/ app.apk\n# Gera projeto que pode ser aberto no Android Studio"
       }
     ],
     points: [
@@ -44,7 +60,12 @@ export const chapters: Chapter[] = [
       "Pode exportar o projeto inteiro para o formato Gradle/Android Studio.",
       "É essencial para entender a lógica antes de editar o Smali no ApkTool.",
       "Possui uma versão CLI potente para integração em scripts automatizados.",
-      "Identifica bibliotecas de terceiros integradas ao APK automaticamente."
+      "Identifica bibliotecas de terceiros integradas ao APK automaticamente.",
+      "JADX produz código Java aproximado — mais fácil de ler que Smali para entender lógica.",
+      "O modo --deobf tenta dar nomes significativos a classes ofuscadas (a, b, c → Class1, Class2).",
+      "JADX não permite recompilação — use apenas para leitura e compreensão.",
+      "A versão GUI permite navegação por clique, busca global e exportação.",
+      "Combine JADX (leitura) + ApkTool (modificação) para o melhor workflow."
     ],
     alerts: [
       {
@@ -62,6 +83,14 @@ export const chapters: Chapter[] = [
       {
         type: "success",
         content: "O JADX é frequentemente atualizado para suportar as últimas novidades da linguagem Kotlin e Java."
+      },
+      {
+        type: "success",
+        content: "Se JADX abre e mostra código Java navegável, você tem uma visão de alto nível do app."
+      },
+      {
+        type: "tip",
+        content: "Use JADX para entender a lógica e ApkTool para fazer as modificações no Smali."
       }
     ]
   },
@@ -71,7 +100,7 @@ export const chapters: Chapter[] = [
     title: "dex2jar: DEX para JAR",
     difficulty: "intermediario",
     subtitle: "A clássica ponte para ferramentas Java",
-    intro: "O dex2jar é uma das ferramentas mais icônicas e longevas no arsenal de engenharia reversa Android. Embora o JADX tenha assumido o protagonismo nos últimos anos, o dex2jar cumpre um papel fundamental: ele atua como um tradutor de formatos. O Android utiliza o formato DEX (Dalvik Executable), que é otimizado para dispositivos móveis, enquanto o ecossistema Java tradicional utiliza arquivos JAR (Java Archive). O dex2jar converte o conteúdo de um APK ou de um arquivo classes.dex em um arquivo JAR comum. Por que isso ainda é relevante? A resposta reside na compatibilidade. Existe uma vasta gama de ferramentas de análise estática, scanners de vulnerabilidades e IDEs de Java que foram construídas ao longo de décadas e que não 'falam' Android nativamente, mas processam JARs com perfeição. Ao usar o dex2jar, você desbloqueia o acesso a essas ferramentas veteranas. Internamente, a ferramenta mapeia as instruções do Dalvik/ART de volta para as instruções do Java Virtual Machine (JVM). É um processo complexo que, em APKs muito protegidos, pode gerar erros, mas para a grande maioria dos aplicativos, ele cria uma representação fiel que pode ser aberta em qualquer visualizador de classes Java convencional.",
+    intro: "O dex2jar é uma das ferramentas mais icônicas e longevas no arsenal de engenharia reversa Android. Embora o JADX tenha assumido o protagonismo nos últimos anos, o dex2jar cumpre um papel fundamental: ele atua como um tradutor de formatos. O Android utiliza o formato DEX (Dalvik Executable), que é otimizado para dispositivos móveis, enquanto o ecossistema Java tradicional utiliza arquivos JAR (Java Archive). O dex2jar converte o conteúdo de um APK ou de um arquivo classes.dex em um arquivo JAR comum. Por que isso ainda é relevante? A resposta reside na compatibilidade. Existe uma vasta gama de ferramentas de análise estática, scanners de vulnerabilidades e IDEs de Java que foram construídas ao longo de décadas e que não 'falam' Android nativamente, mas processam JARs com perfeição. Ao usar o dex2jar, você desbloqueia o acesso a essas ferramentas veteranas. Internamente, a ferramenta mapeia as instruções do Dalvik/ART de volta para as instruções do Java Virtual Machine (JVM). É um processo complexo que, em APKs muito protegidos, pode gerar erros, mas para a grande maioria dos aplicativos, ele cria uma representação fiel que pode ser aberta em qualquer visualizador de classes Java convencional. Pense no dex2jar como um despachante aduaneiro digital: ele pega uma mercadoria que veio em um formato estrangeiro (DEX, o 'idioma' do Android) e a reembala no formato local (JAR, o 'idioma' do Java tradicional) para que todas as ferramentas nacionais consigam processá-la sem problemas. É como quando você compra um eletrônico importado e precisa de um adaptador de tomada — o aparelho é o mesmo, mas sem o adaptador ele simplesmente não funciona na sua casa. O dex2jar é esse adaptador universal entre dois mundos que falam línguas diferentes mas compartilham a mesma essência. Na prática brasileira de segurança da informação, muitas empresas utilizam pipelines automatizados de análise de código que foram originalmente construídos para aplicações Java corporativas. Esses pipelines não entendem DEX, mas entendem JAR perfeitamente. Então o dex2jar se torna uma peça-chave nessa engrenagem, permitindo que ferramentas como FindBugs, SpotBugs, SonarQube e até mesmo o próprio IntelliJ IDEA processem o código de aplicativos Android como se fossem projetos Java comuns. Outro cenário onde o dex2jar brilha é quando o JADX falha na decompilação de alguma classe específica — nesses casos, converter para JAR e usar um decompilador alternativo como o Procyon ou o CFR pode revelar o código que estava escondido. É uma ferramenta de fallback essencial que todo analista experiente mantém no seu toolkit, assim como um eletricista sempre carrega um multímetro reserva na mala de ferramentas.",
     codes: [
       {
         lang: "bash",
@@ -96,6 +125,22 @@ export const chapters: Chapter[] = [
       {
         lang: "bash",
         code: "# Usando o dex2jar em conjunto com o unzip\nunzip app.apk classes.dex && sh d2j-dex2jar.sh classes.dex\n# Fluxo rápido para extrair e converter apenas o código"
+      },
+      {
+        lang: "bash",
+        code: "# Convertendo DEX para JAR com dex2jar\nd2j-dex2jar app.apk -o app.jar\n# Gera um JAR que pode ser aberto com JD-GUI"
+      },
+      {
+        lang: "bash",
+        code: "# Convertendo apenas um DEX específico (multidex)\nd2j-dex2jar classes2.dex -o classes2.jar\n# Útil quando o app tem múltiplos arquivos DEX"
+      },
+      {
+        lang: "bash",
+        code: "# Verificando erros na conversão\nd2j-dex2jar app.apk -o app.jar 2>&1 | grep -i error\n# Alguns métodos podem falhar na conversão"
+      },
+      {
+        lang: "bash",
+        code: "# Convertendo JAR de volta para DEX (caminho inverso)\nd2j-jar2dex app_modificado.jar -o classes.dex\n# Permite modificar em Java e converter de volta"
       }
     ],
     points: [
@@ -108,7 +153,12 @@ export const chapters: Chapter[] = [
       "Suporta processamento de múltiplos arquivos DEX simultaneamente.",
       "É a base para o workflow 'dex2jar + JD-GUI'.",
       "Muito útil para auditorias de segurança automatizadas em massa.",
-      "Ferramenta de código aberto com ampla documentação na comunidade."
+      "Ferramenta de código aberto com ampla documentação na comunidade.",
+      "dex2jar converte bytecode Dalvik para bytecode Java (JVM).",
+      "A conversão não é perfeita — alguns métodos podem falhar ou gerar código incorreto.",
+      "O JAR resultante pode ser aberto com qualquer decompilador Java (JD-GUI, CFR, Procyon).",
+      "Útil quando JADX falha em decodificar certas classes.",
+      "O caminho inverso (jar2dex) permite modificar em Java e converter de volta."
     ],
     alerts: [
       {
@@ -126,6 +176,14 @@ export const chapters: Chapter[] = [
       {
         type: "danger",
         content: "Alguns anti-vírus podem detectar o dex2jar como ferramenta de risco; use em ambientes controlados."
+      },
+      {
+        type: "success",
+        content: "Se d2j-dex2jar gera o .jar sem erros fatais, a conversão foi bem-sucedida."
+      },
+      {
+        type: "warning",
+        content: "Código gerado por dex2jar pode ter erros — use apenas como referência, não como fonte."
       }
     ]
   },
@@ -135,7 +193,7 @@ export const chapters: Chapter[] = [
     title: "JD-GUI: Lendo o Código Java",
     difficulty: "intermediario",
     subtitle: "O navegador clássico de classes Java",
-    intro: "O JD-GUI (Java Decompiler GUI) é, para muitos, o 'primeiro amor' da engenharia reversa Java. Ele é um visualizador gráfico autônomo que permite navegar pelo código-fonte de arquivos JAR. Após usar o dex2jar para converter seu APK, o JD-GUI é a ferramenta que você usará para ler o resultado. Sua principal força é a velocidade: ele abre arquivos instantaneamente e permite uma navegação fluida entre classes e métodos. Imagine-o como um navegador web para o seu código; você clica em uma classe referenciada e ele te leva até ela imediatamente. Embora não seja tão completo quanto um JADX em termos de recursos Android específicos (como visualização de recursos), ele brilha pela sua simplicidade e estabilidade. Para analistas que preferem uma abordagem modular — uma ferramenta para converter, outra para ler — o JD-GUI continua imbatível. Ele também oferece recursos úteis como a exportação de todo o código decompilado para um arquivo ZIP, o que permite que você use o seu editor de texto favorito (como VS Code ou Sublime) para fazer buscas textuais pesadas no código recuperado.",
+    intro: "O JD-GUI (Java Decompiler GUI) é, para muitos, o 'primeiro amor' da engenharia reversa Java. Ele é um visualizador gráfico autônomo que permite navegar pelo código-fonte de arquivos JAR. Após usar o dex2jar para converter seu APK, o JD-GUI é a ferramenta que você usará para ler o resultado. Sua principal força é a velocidade: ele abre arquivos instantaneamente e permite uma navegação fluida entre classes e métodos. Imagine-o como um navegador web para o seu código; você clica em uma classe referenciada e ele te leva até ela imediatamente. Embora não seja tão completo quanto um JADX em termos de recursos Android específicos (como visualização de recursos), ele brilha pela sua simplicidade e estabilidade. Para analistas que preferem uma abordagem modular — uma ferramenta para converter, outra para ler — o JD-GUI continua imbatível. Ele também oferece recursos úteis como a exportação de todo o código decompilado para um arquivo ZIP, o que permite que você use o seu editor de texto favorito (como VS Code ou Sublime) para fazer buscas textuais pesadas no código recuperado. Pense no JD-GUI como aquele boteco de esquina que não tem frescura nenhuma mas serve o melhor café da rua: ele não tem decoração sofisticada, não tem cardápio digital, mas faz uma coisa e faz muito bem feito. Enquanto ferramentas mais modernas tentam ser canivetes suíços com mil funcionalidades, o JD-GUI se mantém fiel à sua proposta original de ser um leitor de código Java rápido, leve e confiável. Para o analista brasileiro que trabalha com máquinas modestas — aquele notebook com 4GB de RAM que já viu dias melhores — o JD-GUI é uma bênção, porque consome pouquíssimos recursos do sistema enquanto entrega uma experiência de navegação surpreendentemente fluida. A interface dele é tão intuitiva que lembra aqueles programas da época do Windows XP: você abre, ele funciona, sem precisar de tutorial ou configuração prévia. Outro ponto forte é a capacidade de manter múltiplas abas abertas simultaneamente, permitindo que você compare implementações de diferentes classes lado a lado, como se estivesse folheando um livro técnico com vários marcadores de página. Na prática do dia a dia, muitos profissionais de segurança usam o JD-GUI como ferramenta de triagem rápida: abrem o JAR, dão uma olhada geral na estrutura do código, identificam os pontos de interesse e só então partem para ferramentas mais pesadas quando precisam de uma análise mais profunda. É o equivalente a dar uma 'passada de olho' antes de mergulhar de cabeça.",
     codes: [
       {
         lang: "bash",
@@ -160,6 +218,22 @@ export const chapters: Chapter[] = [
       {
         lang: "bash",
         code: "# Configurando o decompilador interno\n# Help -> Preferences\n# Permite ajustar como o código é exibido"
+      },
+      {
+        lang: "bash",
+        code: "# Abrindo JAR no JD-GUI\njd-gui app.jar\n# Interface gráfica para navegar código Java decompilado"
+      },
+      {
+        lang: "bash",
+        code: "# Exportando todo o código fonte do JD-GUI\n# Menu: File > Save All Sources\n# Gera um ZIP com todos os .java"
+      },
+      {
+        lang: "bash",
+        code: "# Alternativa: usando CFR (decompilador mais moderno)\njava -jar cfr.jar app.jar --outputdir output/\n# CFR geralmente produz código mais legível que JD-GUI"
+      },
+      {
+        lang: "bash",
+        code: "# Usando Procyon (outro decompilador alternativo)\njava -jar procyon.jar -o output/ app.jar\n# Cada decompilador tem pontos fortes diferentes"
       }
     ],
     points: [
@@ -172,7 +246,12 @@ export const chapters: Chapter[] = [
       "Não requer instalação pesada (é um arquivo JAR executável).",
       "Excelente para validar se o dex2jar funcionou corretamente.",
       "Permite visualizar metadados e assinaturas de métodos.",
-      "Possui uma das melhores reconstruções de estruturas de controle Java."
+      "Possui uma das melhores reconstruções de estruturas de controle Java.",
+      "JD-GUI é o visualizador Java mais popular mas está descontinuado.",
+      "CFR e Procyon são alternativas mais modernas com melhor suporte a Java 8+.",
+      "Nenhum decompilador produz código 100% compilável — são para leitura.",
+      "A função 'Save All Sources' exporta todo o projeto para análise offline.",
+      "Use múltiplos decompiladores e compare resultados para melhor compreensão."
     ],
     alerts: [
       {
@@ -190,6 +269,14 @@ export const chapters: Chapter[] = [
       {
         type: "success",
         content: "Para uma análise rápida de lógica, o combo dex2jar + JD-GUI ainda é uma das opções mais velozes."
+      },
+      {
+        type: "success",
+        content: "Se JD-GUI mostra classes e métodos navegáveis, você pode explorar a lógica do app."
+      },
+      {
+        type: "tip",
+        content: "Experimente CFR se JD-GUI produzir código ilegível — cada decompilador tem pontos fortes."
       }
     ]
   },
@@ -199,7 +286,7 @@ export const chapters: Chapter[] = [
     title: "Frida: Hooking em Tempo Real",
     difficulty: "avancado",
     subtitle: "A cirurgia dinâmica no processo Android",
-    intro: "Se o ApkTool é uma autópsia (análise do corpo parado), o Frida é uma cirurgia em tempo real com o paciente acordado. O Frida é um toolkit de instrumentação dinâmica que permite injetar scripts escritos em JavaScript diretamente dentro da memória de um processo Android em execução. Isso muda completamente as regras do jogo. Com o Frida, você não precisa necessariamente recompilar o APK para mudar seu comportamento. Você pode 'sequestrar' (hook) funções, ler argumentos de métodos antes deles serem executados, alterar o valor de retorno e até chamar funções internas do app de forma arbitrária. Historicamente, o Frida revolucionou a segurança mobile por permitir bypasses de proteções complexas, como SSL Pinning e Root Detection, de forma elegante e rápida. Ele funciona através de um modelo cliente-servidor: um binário (frida-server) roda no celular e se comunica com o seu computador via USB. É a ferramenta definitiva para análise dinâmica, permitindo que você observe o aplicativo interagindo com a rede e o sistema operacional 'ao vivo', revelando segredos que a análise estática (apenas lendo o código) levaria semanas para descobrir.",
+    intro: "Se o ApkTool é uma autópsia (análise do corpo parado), o Frida é uma cirurgia em tempo real com o paciente acordado. O Frida é um toolkit de instrumentação dinâmica que permite injetar scripts escritos em JavaScript diretamente dentro da memória de um processo Android em execução. Isso muda completamente as regras do jogo. Com o Frida, você não precisa necessariamente recompilar o APK para mudar seu comportamento. Você pode 'sequestrar' (hook) funções, ler argumentos de métodos antes deles serem executados, alterar o valor de retorno e até chamar funções internas do app de forma arbitrária. Historicamente, o Frida revolucionou a segurança mobile por permitir bypasses de proteções complexas, como SSL Pinning e Root Detection, de forma elegante e rápida. Ele funciona através de um modelo cliente-servidor: um binário (frida-server) roda no celular e se comunica com o seu computador via USB. É a ferramenta definitiva para análise dinâmica, permitindo que você observe o aplicativo interagindo com a rede e o sistema operacional 'ao vivo', revelando segredos que a análise estática (apenas lendo o código) levaria semanas para descobrir. Para entender o poder do Frida, imagine que você é um fiscal da vigilância sanitária que, em vez de analisar a receita escrita de um restaurante (análise estática), entra na cozinha durante o horário de pico e observa cada prato sendo preparado em tempo real (análise dinâmica). Você vê exatamente quais ingredientes estão sendo usados, em que quantidade, e pode até pedir para o cozinheiro trocar um ingrediente na hora sem parar a produção. No contexto brasileiro de segurança, o Frida se tornou indispensável para testar aplicativos bancários, fintechs e apps de pagamento que utilizam múltiplas camadas de proteção. Muitos desses aplicativos implementam verificações de integridade que só podem ser compreendidas observando o comportamento em tempo de execução — a análise estática do código ofuscado simplesmente não revela a lógica completa. O Frida também é extraordinariamente útil para entender protocolos de comunicação proprietários: ao interceptar as chamadas de rede antes da criptografia ser aplicada, você consegue ver os dados 'em claro', como se estivesse lendo uma carta antes dela ser colocada no envelope. A curva de aprendizado é íngreme, comparável a aprender a dirigir em São Paulo no horário de rush, mas uma vez que você domina os conceitos fundamentais de hooking e instrumentação, as possibilidades são praticamente ilimitadas. Desde automatizar testes de penetração até criar bots para jogos mobile, o Frida é o canivete suíço da análise dinâmica que todo profissional de segurança sério precisa dominar.",
     codes: [
       {
         lang: "javascript",
@@ -224,6 +311,22 @@ export const chapters: Chapter[] = [
       {
         lang: "javascript",
         code: "// Monitorando chamadas de rede (exemplo genérico)\nvar HttpLog = Java.use('okhttp3.OkHttpClient');\n// Hookar o construtor ou métodos de envio para ver URLs"
+      },
+      {
+        lang: "bash",
+        code: "# Instalando Frida no PC\npip install frida-tools\n# Instala o CLI do Frida para instrumentação"
+      },
+      {
+        lang: "bash",
+        code: "# Instalando Frida Server no dispositivo Android\nadb push frida-server /data/local/tmp/\nadb shell chmod 755 /data/local/tmp/frida-server\nadb shell /data/local/tmp/frida-server &"
+      },
+      {
+        lang: "bash",
+        code: "# Listando processos que podem ser instrumentados\nfrida-ps -U | grep -i app_name\n# -U = USB device"
+      },
+      {
+        lang: "bash",
+        code: "# Script Frida básico para bypass de SSL Pinning\nfrida -U -f com.app --codeshare akabe1/frida-multiple-unpinning\n# Usa script da comunidade para desabilitar SSL pinning"
       }
     ],
     points: [
@@ -236,7 +339,12 @@ export const chapters: Chapter[] = [
       "Pode ser usado para automatizar testes funcionais e de segurança.",
       "Oferece suporte a 'Tracer' para ver quais métodos estão sendo chamados em tempo real.",
       "É a ferramenta de escolha para pesquisadores de segurança de elite.",
-      "Permite injetar código em apps de sistema e processos protegidos."
+      "Permite injetar código em apps de sistema e processos protegidos.",
+      "Frida permite instrumentação dinâmica sem modificar o APK.",
+      "Requer root no dispositivo OU app com debuggable=true.",
+      "Scripts da comunidade (Codeshare) resolvem problemas comuns como SSL pinning.",
+      "Permite hookar métodos em tempo real e modificar retornos.",
+      "Objection é um wrapper do Frida com comandos prontos para tarefas comuns."
     ],
     alerts: [
       {
@@ -254,6 +362,14 @@ export const chapters: Chapter[] = [
       {
         type: "info",
         content: "Aprender a lógica do Frida requer conhecimento sólido de Java e JavaScript."
+      },
+      {
+        type: "success",
+        content: "Se frida-ps lista o processo do app, o Frida Server está funcionando corretamente."
+      },
+      {
+        type: "danger",
+        content: "Frida requer ROOT no dispositivo. Em devices não-rooted, use apenas com apps debuggable."
       }
     ]
   },
@@ -263,7 +379,7 @@ export const chapters: Chapter[] = [
     title: "apksigner em Profundidade",
     difficulty: "intermediario",
     subtitle: "A garantia de autenticidade do Google",
-    intro: "O apksigner não é apenas um utilitário de assinatura; ele é o guardião da integridade do ecossistema Android. Quando você modifica um APK com o ApkTool, a assinatura original do desenvolvedor é quebrada. Para que o Android aceite instalar esse 'novo' aplicativo, você deve assiná-lo com sua própria chave digital. O apksigner, introduzido no Android Build Tools, substituiu o antigo jarsigner por uma razão crucial: suporte a múltiplos esquemas de assinatura. O Android evoluiu do V1 (baseado em JAR) para o V2 (APK Signature Scheme v2, introduzido no Android 7.0), V3 (com rotação de chaves no Android 9) e V4 (para streaming de instalação no Android 11). Cada versão melhora a segurança e a velocidade de verificação. O apksigner é inteligente o suficiente para aplicar todos esses esquemas simultaneamente, garantindo que seu APK modificado seja compatível com dispositivos antigos e novos. Sem uma assinatura válida, o instalador do Android (Package Installer) rejeitará o arquivo com o erro 'O pacote parece estar corrompido', o que na verdade é apenas o sistema dizendo: 'Eu não confio em quem criou este arquivo'.",
+    intro: "O apksigner não é apenas um utilitário de assinatura; ele é o guardião da integridade do ecossistema Android. Quando você modifica um APK com o ApkTool, a assinatura original do desenvolvedor é quebrada. Para que o Android aceite instalar esse 'novo' aplicativo, você deve assiná-lo com sua própria chave digital. O apksigner, introduzido no Android Build Tools, substituiu o antigo jarsigner por uma razão crucial: suporte a múltiplos esquemas de assinatura. O Android evoluiu do V1 (baseado em JAR) para o V2 (APK Signature Scheme v2, introduzido no Android 7.0), V3 (com rotação de chaves no Android 9) e V4 (para streaming de instalação no Android 11). Cada versão melhora a segurança e a velocidade de verificação. O apksigner é inteligente o suficiente para aplicar todos esses esquemas simultaneamente, garantindo que seu APK modificado seja compatível com dispositivos antigos e novos. Sem uma assinatura válida, o instalador do Android (Package Installer) rejeitará o arquivo com o erro 'O pacote parece estar corrompido', o que na verdade é apenas o sistema dizendo: 'Eu não confio em quem criou este arquivo'. Para entender a importância do apksigner, pense nele como o cartório digital do mundo Android. Assim como no Brasil você precisa reconhecer firma em documentos importantes para que eles tenham validade legal, no Android todo aplicativo precisa ter sua 'firma reconhecida' digitalmente para ser aceito pelo sistema. Sem essa assinatura, o APK é como um contrato sem firma reconhecida: pode até estar correto no conteúdo, mas nenhuma instituição vai aceitá-lo como válido. O processo de assinatura digital utiliza criptografia assimétrica — um par de chaves pública e privada — onde a chave privada (guardada no seu arquivo .jks ou .p12) é usada para criar uma 'impressão digital' única do conteúdo do APK. Qualquer alteração, por menor que seja, mesmo um único byte modificado após a assinatura, invalida completamente essa impressão digital. É como se você alterasse uma letra num documento com firma reconhecida: o cartório imediatamente identificaria a adulteração. No contexto prático da modificação de APKs, o apksigner é sempre o último passo do processo. Você decompila com o ApkTool, faz suas alterações, recompila, alinha com o zipalign e só então assina com o apksigner. Essa ordem é sagrada e invertê-la é um dos erros mais comuns de iniciantes, equivalente a colocar o telhado antes de levantar as paredes de uma casa. O apksigner também é fundamental para diagnóstico: quando um APK modificado não instala, o comando 'apksigner verify' é a primeira ferramenta que você deve usar para verificar se o problema está na assinatura ou em outro lugar.",
     codes: [
       {
         lang: "bash",
@@ -288,6 +404,22 @@ export const chapters: Chapter[] = [
       {
         lang: "bash",
         code: "# Usando uma chave em formato PKCS12 (.p12)\napksigner sign --ks minha-chave.p12 app.apk\n# O apksigner suporta diversos formatos de armazenamento de chaves"
+      },
+      {
+        lang: "bash",
+        code: "# Verificando assinatura detalhada com apksigner\napksigner verify --verbose --print-certs app.apk\n# Mostra todos os esquemas e detalhes do certificado"
+      },
+      {
+        lang: "bash",
+        code: "# Verificando se o APK usa signature scheme v2+\napksigner verify -v app.apk | grep 'v2\\|v3\\|v4'\n# v2+ protege contra modificação pós-assinatura"
+      },
+      {
+        lang: "bash",
+        code: "# Comparando assinaturas de duas versões do mesmo app\napksigner verify --print-certs v1.apk > cert1.txt\napksigner verify --print-certs v2.apk > cert2.txt\ndiff cert1.txt cert2.txt"
+      },
+      {
+        lang: "bash",
+        code: "# Removendo assinatura antiga antes de re-assinar\nzip -d app.apk 'META-INF/*'\n# Remove a pasta META-INF que contém a assinatura v1"
       }
     ],
     points: [
@@ -300,7 +432,12 @@ export const chapters: Chapter[] = [
       "Verifica a integridade bit-a-bit do arquivo recompilado.",
       "Permite o uso de certificados de teste ou chaves de produção.",
       "É uma ferramenta essencial para o fluxo final do ApkTool.",
-      "Ajuda a diagnosticar problemas de instalação relacionados a certificados."
+      "Ajuda a diagnosticar problemas de instalação relacionados a certificados.",
+      "apksigner é a ferramenta oficial do Google para assinatura de APKs.",
+      "Suporta esquemas v1 (JAR signing), v2, v3 e v4 simultaneamente.",
+      "v2+ calcula hash do APK inteiro — qualquer modificação posterior invalida.",
+      "O --print-certs mostra o fingerprint SHA-256 do certificado usado.",
+      "Dois APKs com mesmo certificado podem se atualizar mutuamente."
     ],
     alerts: [
       {
@@ -318,6 +455,14 @@ export const chapters: Chapter[] = [
       {
         type: "danger",
         content: "Nunca perca sua .jks de produção se estiver modificando apps para uso contínuo."
+      },
+      {
+        type: "success",
+        content: "Se apksigner verify retorna 'Verified', o APK está corretamente assinado."
+      },
+      {
+        type: "danger",
+        content: "Modificar qualquer byte do APK após assinatura v2+ invalida completamente a assinatura."
       }
     ]
   },
@@ -327,7 +472,7 @@ export const chapters: Chapter[] = [
     title: "zipalign em Profundidade",
     difficulty: "intermediario",
     subtitle: "Otimização de memória e acesso a dados",
-    intro: "O zipalign é muitas vezes negligenciado por iniciantes, mas é fundamental para o desempenho e a estabilidade de qualquer aplicativo Android. Ele é uma ferramenta de alinhamento de arquivos que garante que todos os dados não comprimidos dentro do APK (como imagens, sons e arquivos de recursos) comecem em um limite de 4 bytes em relação ao início do arquivo. Por que isso importa? O Android utiliza uma técnica chamada 'memory-mapping' (mmap) para ler recursos do APK. Se os dados estiverem alinhados a 4 bytes, o sistema operacional pode ler as informações diretamente da memória sem precisar realizar cópias extras ou cálculos de deslocamento custosos para a CPU. Se o APK não estiver alinhado, o Android terá que ler os dados byte a byte e realinhá-los em tempo de execução, o que consome mais RAM e bateria. Em dispositivos com poucos recursos, um app não alinhado pode ser fechado pelo sistema por 'uso excessivo de memória' sem um motivo aparente. O zipalign é, portanto, o toque final de polimento que transforma um amontoado de arquivos em um pacote eficiente e profissional.",
+    intro: "O zipalign é muitas vezes negligenciado por iniciantes, mas é fundamental para o desempenho e a estabilidade de qualquer aplicativo Android. Ele é uma ferramenta de alinhamento de arquivos que garante que todos os dados não comprimidos dentro do APK (como imagens, sons e arquivos de recursos) comecem em um limite de 4 bytes em relação ao início do arquivo. Por que isso importa? O Android utiliza uma técnica chamada 'memory-mapping' (mmap) para ler recursos do APK. Se os dados estiverem alinhados a 4 bytes, o sistema operacional pode ler as informações diretamente da memória sem precisar realizar cópias extras ou cálculos de deslocamento custosos para a CPU. Se o APK não estiver alinhado, o Android terá que ler os dados byte a byte e realinhá-los em tempo de execução, o que consome mais RAM e bateria. Em dispositivos com poucos recursos, um app não alinhado pode ser fechado pelo sistema por 'uso excessivo de memória' sem um motivo aparente. O zipalign é, portanto, o toque final de polimento que transforma um amontoado de arquivos em um pacote eficiente e profissional. Para entender o zipalign com uma analogia brasileira, imagine uma mudança de casa. Você pode simplesmente jogar tudo dentro do caminhão de qualquer jeito — as caixas ficam tortas, os móveis encavalados, os espaços mal aproveitados. O caminhão até chega no destino, mas na hora de descarregar, você vai gastar o triplo do tempo procurando cada item e reorganizando tudo. Agora imagine que você contratou aquele profissional organizado que empilha tudo perfeitamente alinhado, com cada caixa acessível sem precisar mover as outras. Isso é o que o zipalign faz com os dados dentro do APK: organiza tudo de forma que o sistema operacional consiga acessar qualquer recurso instantaneamente, sem precisar 'remexer' o pacote inteiro. No contexto dos celulares brasileiros, onde uma parcela significativa da população utiliza dispositivos de entrada com 2GB ou 3GB de RAM, essa otimização faz uma diferença real e perceptível. Um aplicativo não alinhado pode consumir megabytes extras de memória RAM desnecessariamente, competindo com outros apps e com o próprio sistema operacional pelos recursos limitados do aparelho. O resultado prático é aquele cenário que todo brasileiro conhece: o celular fica lento, os apps fecham sozinhos e a experiência de uso se degrada. O zipalign previne exatamente esse tipo de problema ao garantir que o acesso aos recursos do APK seja feito da forma mais eficiente possível pelo kernel do Linux que roda por baixo do Android. É uma ferramenta silenciosa e humilde, mas absolutamente essencial no pipeline de qualquer modificação séria de APK.",
     codes: [
       {
         lang: "bash",
@@ -352,6 +497,22 @@ export const chapters: Chapter[] = [
       {
         lang: "bash",
         code: "# Verificando o impacto: dump de cabeçalhos zip\nunzip -v app-alinhado.apk | head\n# Permite observar os offsets dos arquivos internos"
+      },
+      {
+        lang: "bash",
+        code: "# Verificando alinhamento com zipalign\nzipalign -c -v 4 app.apk 2>&1 | tail -5\n# Mostra resultado da verificação"
+      },
+      {
+        lang: "bash",
+        code: "# Alinhando com page alignment para Android 14+\nzipalign -p -f 4 input.apk output.apk\n# -p = page align shared libraries"
+      },
+      {
+        lang: "bash",
+        code: "# Script de alinhamento em lote\nfor apk in *.apk; do\n  zipalign -f 4 \"$apk\" \"aligned_$apk\"\ndone"
+      },
+      {
+        lang: "bash",
+        code: "# Verificando se libs .so estão page-aligned\nzipalign -c -p -v 4 app.apk 2>&1 | grep '\\.so'\n# Importante para performance em Android 14+"
       }
     ],
     points: [
@@ -364,7 +525,12 @@ export const chapters: Chapter[] = [
       "Garante que recursos brutos (raw assets) sejam lidos de forma otimizada.",
       "Ajuda a evitar erros de 'Out of Memory' em dispositivos de baixo custo.",
       "É uma ferramenta simples, mas com impacto profundo na experiência do usuário.",
-      "Faz parte do Android SDK Build Tools."
+      "Faz parte do Android SDK Build Tools.",
+      "Zipalign otimiza acesso a dados não comprimidos via mmap().",
+      "Deve ser executado ANTES da assinatura v2+ (que protege o arquivo inteiro).",
+      "Page alignment (-p) é recomendado para Android 14+ com libs nativas.",
+      "APKs não alinhados funcionam mas consomem mais memória RAM.",
+      "O Google Play rejeita APKs que não passam na verificação de alinhamento."
     ],
     alerts: [
       {
@@ -382,6 +548,14 @@ export const chapters: Chapter[] = [
       {
         type: "success",
         content: "Um APK alinhado carrega imagens e layouts visivelmente mais rápido."
+      },
+      {
+        type: "success",
+        content: "Se zipalign -c retorna 'Verification successful', o APK está otimizado."
+      },
+      {
+        type: "danger",
+        content: "Executar zipalign DEPOIS do apksigner invalida a assinatura — ordem importa!"
       }
     ]
   },
@@ -391,7 +565,7 @@ export const chapters: Chapter[] = [
     title: "baksmali e smali Standalone",
     difficulty: "avancado",
     subtitle: "O assembler e disassembler do Android",
-    intro: "Embora o ApkTool seja uma suíte completa, ele é construído sobre ombros de gigantes. O 'motor' que faz a mágica de transformar bytecode binário (.dex) em texto legível (.smali) chama-se baksmali. O processo inverso, transformar texto de volta em binário, é feito pelo smali. Usar essas ferramentas de forma standalone (independente) é uma técnica avançada reservada para situações onde o ApkTool é 'demais' ou falha. Imagine que você deseja apenas extrair o código de um APK sem tocar nos recursos (imagens, layouts, XMLs). Ou talvez você esteja lidando com um APK de 2GB e só quer alterar uma única linha de código. O baksmali permite que você trabalhe de forma cirúrgica apenas nos arquivos DEX. Historicamente, essas ferramentas foram criadas por Ben Gruver (conhecido como JesusFreke), e elas definiram o padrão de como a comunidade entende o bytecode do Dalvik. Dominar o baksmali standalone te dá o poder de processar grandes quantidades de código de forma extremamente rápida e criar suas próprias ferramentas de automação que não dependem da estrutura pesada do ApkTool.",
+    intro: "Embora o ApkTool seja uma suíte completa, ele é construído sobre ombros de gigantes. O 'motor' que faz a mágica de transformar bytecode binário (.dex) em texto legível (.smali) chama-se baksmali. O processo inverso, transformar texto de volta em binário, é feito pelo smali. Usar essas ferramentas de forma standalone (independente) é uma técnica avançada reservada para situações onde o ApkTool é 'demais' ou falha. Imagine que você deseja apenas extrair o código de um APK sem tocar nos recursos (imagens, layouts, XMLs). Ou talvez você esteja lidando com um APK de 2GB e só quer alterar uma única linha de código. O baksmali permite que você trabalhe de forma cirúrgica apenas nos arquivos DEX. Historicamente, essas ferramentas foram criadas por Ben Gruver (conhecido como JesusFreke), e elas definiram o padrão de como a comunidade entende o bytecode do Dalvik. Dominar o baksmali standalone te dá o poder de processar grandes quantidades de código de forma extremamente rápida e criar suas próprias ferramentas de automação que não dependem da estrutura pesada do ApkTool. Para usar uma analogia bem brasileira, pense no ApkTool como uma oficina mecânica completa com elevador, scanner automotivo, compressor e todas as ferramentas imagináveis. Já o baksmali e o smali são como aquele jogo de chaves de boca que o mecânico veterano carrega no bolso do macacão: não tem frescura, não tem interface bonita, mas resolve o problema na hora quando você sabe exatamente o que precisa fazer. É a diferença entre levar o carro na concessionária para trocar uma lâmpada ou simplesmente abrir o farol você mesmo com uma chave Phillips. Para o profissional que trabalha com automação e processamento em lote — imagine analisar centenas de APKs por dia em busca de padrões maliciosos — o baksmali standalone é infinitamente mais eficiente que rodar o ApkTool completo em cada arquivo. Você pode criar scripts bash ou Python que invocam o baksmali, extraem apenas as classes de interesse, aplicam patches automatizados via sed ou regex, e remontam o DEX com o smali, tudo em questão de segundos. Essa abordagem é particularmente valiosa no contexto de empresas brasileiras de segurança que precisam analisar grandes volumes de aplicativos em busca de malware ou violações de privacidade. Além disso, o baksmali é indispensável quando você está trabalhando com ROMs customizadas do Android — aquelas modificações de sistema que a comunidade brasileira de XDA Developers tanto aprecia. Arquivos de framework como o 'framework.jar' e 'services.jar' do sistema Android são frequentemente distribuídos em formato ODEX ou VDEX otimizado, e o baksmali é a única ferramenta capaz de processá-los corretamente para permitir modificações no nível do sistema operacional.",
     codes: [
       {
         lang: "bash",
@@ -416,6 +590,22 @@ export const chapters: Chapter[] = [
       {
         lang: "bash",
         code: "# Usando o baksmali para analisar arquivos ODEX/VDEX de sistema\njava -jar baksmali.jar x framework.odex\n# 'x' de deodex, usado em modificações de ROMs"
+      },
+      {
+        lang: "bash",
+        code: "# Usando baksmali standalone para desmontar um DEX\njava -jar baksmali.jar d classes.dex -o smali_output/\n# Mais controle que o ApkTool para operações específicas"
+      },
+      {
+        lang: "bash",
+        code: "# Remontando Smali para DEX com smali.jar\njava -jar smali.jar a smali_output/ -o classes_modified.dex\n# Converte os .smali de volta para .dex"
+      },
+      {
+        lang: "bash",
+        code: "# Substituindo o DEX dentro do APK\nzip -j app.apk classes_modified.dex\n# Injeta o DEX modificado diretamente no APK"
+      },
+      {
+        lang: "bash",
+        code: "# Usando baksmali com API level específico\njava -jar baksmali.jar d --api 33 classes.dex -o smali/\n# Garante decodificação correta para Android 13"
       }
     ],
     points: [
@@ -428,7 +618,12 @@ export const chapters: Chapter[] = [
       "Permitem trabalhar com arquivos binários que o ApkTool às vezes rejeita.",
       "São ferramentas de linha de comando puras, ideais para scripts complexos.",
       "Suportam as últimas instruções do Android 14 e arquiteturas de 64 bits.",
-      "A manutenção é feita por uma das figuras mais respeitadas na cena de reversa."
+      "A manutenção é feita por uma das figuras mais respeitadas na cena de reversa.",
+      "Baksmali standalone oferece mais controle que o ApkTool para operações no DEX.",
+      "Permite trabalhar diretamente com o DEX sem decodificar recursos.",
+      "O flag --api garante decodificação correta de instruções específicas da versão.",
+      "Útil para patches cirúrgicos onde você só precisa modificar uma classe.",
+      "Smali.jar faz o caminho inverso: converte .smali de volta para .dex."
     ],
     alerts: [
       {
@@ -446,6 +641,14 @@ export const chapters: Chapter[] = [
       {
         type: "success",
         content: "Dominar o standalone é o primeiro passo para criar seus próprios patchers automáticos."
+      },
+      {
+        type: "success",
+        content: "Se smali.jar gera o .dex sem erros, seu código Smali está sintaticamente correto."
+      },
+      {
+        type: "tip",
+        content: "Use baksmali standalone quando precisar de controle fino sobre API level e opções de desmontagem."
       }
     ]
   }

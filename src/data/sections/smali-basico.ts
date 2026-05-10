@@ -7,7 +7,7 @@ export const chapters: Chapter[] = [
     title: "O Que é Smali?",
     difficulty: "intermediario",
     subtitle: "O assembler da Máquina Virtual Dalvik",
-    intro: "Você já ouviu aquela história de que computadores só entendem zeros e uns? Pois é, mas entre esses zeros e o código Java elegante que os programadores escrevem, existe um 'meio de campo' fascinante. No mundo Android, esse meio de campo é o Smali. Imagine que o código Java é como uma partitura de música erudita: linda e fácil de ler para um músico. O Bytecode Dalvik (o arquivo .dex) é a gravação digital dessa música em um CD: perfeita para o player (o celular) tocar, mas impossível de ler apenas olhando para os sulcos do disco. O Smali é como se alguém pegasse aquela gravação e escrevesse, nota por nota, exatamente o que o player está fazendo: 'Abaixe a agulha aqui', 'Aumente o volume ali'. Ele é um 'Assembler', uma linguagem de baixíssimo nível que traduz as instruções binárias complexas em mnemônicos que nós, humanos, conseguimos entender com um pouco de treino. No Brasil, temos a analogia do 'mecânico de confiança': ele não precisa do manual da fábrica para saber o que há de errado com o motor; ele ouve o barulho e entende o que cada peça está fazendo. Aprender Smali é se tornar esse mecânico. Você não olha para o código fonte idealizado, você olha para a realidade do que está sendo executado no processador. Internamente, o Smali é a representação textual do que o 'Baksmali' extrai dos arquivos DEX, permitindo que você altere a lógica do aplicativo sem nunca ter visto uma única linha do código original em Java ou Kotlin.",
+    intro: "Você já ouviu aquela história de que computadores só entendem zeros e uns? Pois é, mas entre esses zeros e o código Java elegante que os programadores escrevem, existe um 'meio de campo' fascinante que poucos conhecem. No mundo Android, esse meio de campo é o Smali. Imagine que o código Java é como uma partitura de música erudita: linda e fácil de ler para um músico treinado, com notas, compassos e dinâmicas bem definidas. O Bytecode Dalvik (o arquivo .dex) é a gravação digital dessa música em um CD: perfeita para o player (o celular) tocar, mas impossível de ler apenas olhando para os sulcos do disco. O Smali é como se alguém pegasse aquela gravação e escrevesse, nota por nota, exatamente o que o player está fazendo: 'Abaixe a agulha aqui', 'Aumente o volume ali', 'Repita este trecho três vezes'. Ele é um 'Assembler', uma linguagem de baixíssimo nível que traduz as instruções binárias complexas em mnemônicos que nós, humanos, conseguimos entender com um pouco de treino e dedicação. No Brasil, temos a analogia do 'mecânico de confiança' daqueles que ficam na esquina do bairro: ele não precisa do manual da fábrica importado em inglês para saber o que há de errado com o motor; ele ouve o barulho, sente a vibração e entende o que cada peça está fazendo. Aprender Smali é se tornar esse mecânico. Você não olha para o código fonte idealizado que o programador escreveu no conforto do Android Studio; você olha para a realidade crua do que está sendo executado no processador ARM do celular. Internamente, o Smali é a representação textual do que o 'Baksmali' (o desmontador) extrai dos arquivos DEX, permitindo que você altere a lógica do aplicativo sem nunca ter visto uma única linha do código original em Java ou Kotlin. É a ferramenta definitiva para quem quer entender como os apps realmente funcionam por dentro, além da superfície bonita que o usuário vê.",
     codes: [
       {
         lang: "smali",
@@ -32,6 +32,22 @@ export const chapters: Chapter[] = [
       {
         lang: "smali",
         code: "# 6. Retornando um valor booleano verdadeiro\nconst/4 v0, 0x1\nreturn v0"
+      },
+      {
+        lang: "smali",
+        code: "# 7. Chamando um método e capturando o resultado\ninvoke-virtual {p0}, Lcom/exemplo/Calculadora;->getValor()I\nmove-result v0\n# v0 agora contém o inteiro retornado pelo método"
+      },
+      {
+        lang: "smali",
+        code: "# 8. Imprimindo um log para debug\nconst-string v0, \"MEU_TAG\"\nconst-string v1, \"App iniciado!\"\ninvoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I"
+      },
+      {
+        lang: "smali",
+        code: "# 9. Comparação condicional simples\nif-eqz v0, :cond_false\n# Se v0 == 0, pula para :cond_false\n# Se v0 != 0, continua executando a próxima linha"
+      },
+      {
+        lang: "smali",
+        code: "# 10. Acessando um campo estático (como uma constante)\nsget-object v0, Lcom/app/Config;->API_URL:Ljava/lang/String;\n# v0 agora contém a URL da API definida na classe Config"
       }
     ],
     points: [
@@ -44,7 +60,12 @@ export const chapters: Chapter[] = [
       "Permite a modificação da lógica do app em nível de instrução atômica.",
       "É a base para a criação de patches, mods e análise de malware.",
       "Caminhos de pacotes usam '/' em vez de '.' (ex: java/lang/String).",
-      "O nome 'Smali' significa 'Assembler' em Islandês (homenagem à herança do autor)."
+      "O nome 'Smali' significa 'Assembler' em Islandês (homenagem à herança do autor).",
+      "O Smali é case-sensitive para nomes de classes e campos, mas não para instruções.",
+      "Cada arquivo .smali começa com .class e .super obrigatoriamente.",
+      "Interfaces implementadas são declaradas com .implements após o .super.",
+      "Anotações (@Override, @Nullable) aparecem como blocos .annotation no Smali.",
+      "O nome 'Smali' significa 'Assembler' em Islandês — homenagem do autor Ben Gruver."
     ],
     alerts: [
       {
@@ -58,6 +79,14 @@ export const chapters: Chapter[] = [
       {
         type: "warning",
         content: "Qualquer erro de sintaxe no Smali impedirá o ApkTool de recompilar o aplicativo."
+      },
+      {
+        type: "success",
+        content: "Se você consegue ler .class, .super e .method em um arquivo .smali, já está no caminho certo!"
+      },
+      {
+        type: "danger",
+        content: "Qualquer erro de sintaxe no Smali (mesmo um espaço a mais) impedirá a recompilação."
       }
     ]
   },
@@ -67,7 +96,7 @@ export const chapters: Chapter[] = [
     title: "Dalvik vs ART",
     difficulty: "intermediario",
     subtitle: "JIT, AOT e o impacto na engenharia reversa",
-    intro: "A história do Android é marcada por uma grande transição sob o capô: a mudança do Dalvik para o ART (Android Runtime). Imagine que você tem um tradutor de livros. No tempo do Dalvik (Android 4.4 e anteriores), o tradutor esperava você abrir a página para traduzir o texto ali na hora (isso é o JIT - Just-In-Time). Era rápido para instalar o app, mas ele rodava um pouco mais 'pesado' porque o celular estava sempre trabalhando na tradução. Já o ART (Android 5.0 em diante) é como um tradutor que traduz o livro inteiro na hora que você o compra e já o deixa pronto na prateleira (isso é o AOT - Ahead-Of-Time). O app abre mais rápido e gasta menos bateria, mas a instalação demora um pouco mais. Para nós, no ApkTool, isso é fascinante porque, embora o Android moderno use arquivos `.odex` e `.vdex` otimizados para o hardware, a 'matéria-prima' original que extraímos do APK continua sendo o Bytecode Dalvik (arquivos `.dex`). O Smali continua sendo o nosso idioma universal. No Brasil, é como se tivéssemos mudado o motor do carro de carburado para injeção eletrônica: a tecnologia mudou completamente, mas o combustível (o Smali) continua sendo o mesmo que faz tudo funcionar. Entender essa diferença ajuda a explicar por que certos apps modificados demoram a 'otimizar' na primeira inicialização após um update de sistema.",
+    intro: "A história do Android é marcada por uma grande transição sob o capô que mudou completamente a forma como os aplicativos são executados: a mudança do Dalvik para o ART (Android Runtime). Imagine que você tem um tradutor de livros trabalhando para uma editora brasileira. No tempo do Dalvik (Android 4.4 e anteriores), o tradutor esperava você abrir a página para traduzir o texto ali na hora, ao vivo (isso é o JIT - Just-In-Time). Era rápido para instalar o app — como comprar um livro em inglês e ir traduzindo conforme lê — mas ele rodava um pouco mais 'pesado' porque o celular estava sempre trabalhando na tradução simultânea, gastando bateria e processamento. Já o ART (Android 5.0 em diante) é como um tradutor que traduz o livro inteiro na hora que você o compra e já o deixa pronto na prateleira em português (isso é o AOT - Ahead-Of-Time). O app abre mais rápido e gasta menos bateria no dia a dia, mas a instalação demora um pouco mais porque o sistema precisa fazer toda a tradução de uma vez. Para nós que trabalhamos com ApkTool, isso é fascinante porque, embora o Android moderno use arquivos '.odex' e '.vdex' otimizados especificamente para o hardware do aparelho (como um livro traduzido especificamente para o dialeto local), a 'matéria-prima' original que extraímos do APK continua sendo o Bytecode Dalvik (arquivos '.dex'). O Smali continua sendo o nosso idioma universal de trabalho. No Brasil, é como se tivéssemos mudado o motor do carro de carburado para injeção eletrônica: a tecnologia mudou completamente por baixo do capô, mas o combustível (o Smali/DEX) continua sendo o mesmo que faz tudo funcionar. Entender essa diferença ajuda a explicar por que certos apps modificados demoram a 'otimizar' na primeira inicialização após um update de sistema — o ART precisa recompilar tudo do zero.",
     codes: [
       {
         lang: "bash",
@@ -92,6 +121,22 @@ export const chapters: Chapter[] = [
       {
         lang: "bash",
         code: "# 6. Como o ApkTool lida com isso:\n# Ele sempre busca o 'classes.dex' original para gerar o Smali."
+      },
+      {
+        lang: "bash",
+        code: "# 7. Verificando qual runtime o dispositivo usa\nadb shell getprop persist.sys.dalvik.vm.lib.2\n# Retorna 'libart.so' para ART ou 'libdvm.so' para Dalvik"
+      },
+      {
+        lang: "bash",
+        code: "# 8. Forçando recompilação AOT de um app específico\nadb shell cmd package compile -m speed -f com.exemplo.app\n# Útil após instalar um mod para otimizar performance"
+      },
+      {
+        lang: "bash",
+        code: "# 9. Verificando o status de otimização de um app\nadb shell dumpsys package com.exemplo.app | grep -i \"code\\|dex\"\n# Mostra se o app está otimizado ou rodando em modo interpretado"
+      },
+      {
+        lang: "bash",
+        code: "# 10. Limpando cache de otimização para forçar re-otimização\nadb shell cmd package compile --reset com.exemplo.app\n# Força o ART a recompilar na próxima execução"
       }
     ],
     points: [
@@ -104,7 +149,12 @@ export const chapters: Chapter[] = [
       "O Smali ignora as otimizações do ART e foca no código lógico base.",
       "A mudança para ART permitiu que o Android suportasse melhor processadores 64-bit.",
       "A partir do Android 7.0, o ART usa um mix de JIT, AOT e Perfis de Usuário.",
-      "Modificar o Smali obriga o ART a re-otimizar o aplicativo na próxima execução."
+      "Modificar o Smali obriga o ART a re-otimizar o aplicativo na próxima execução.",
+      "O ART moderno usa um mix de JIT + AOT + Profile-Guided Compilation.",
+      "Arquivos .vdex contêm o DEX original para facilitar atualizações sem recompilação.",
+      "O Dalvik foi oficialmente descontinuado no Android 5.0 (Lollipop).",
+      "Apps modificados forçam o ART a re-otimizar na primeira execução após instalação.",
+      "O comando 'cmd package compile' permite controlar manualmente a otimização."
     ],
     alerts: [
       {
@@ -118,6 +168,14 @@ export const chapters: Chapter[] = [
       {
         type: "tip",
         content: "Se um app modificado estiver lento, tente o comando 'cmd package compile' para forçar a otimização ART."
+      },
+      {
+        type: "success",
+        content: "Se adb shell getprop retorna 'libart.so', seu dispositivo usa ART (todos os modernos usam)."
+      },
+      {
+        type: "danger",
+        content: "Não tente usar arquivos .odex de um dispositivo em outro — são específicos para o hardware."
       }
     ]
   },
@@ -127,7 +185,7 @@ export const chapters: Chapter[] = [
     title: "Registradores: As Variáveis do Smali",
     difficulty: "intermediario",
     subtitle: "p0, v0 e a gestão de memória interna",
-    intro: "No Java, você cria variáveis com nomes lindos como `int contador` ou `String nomeDoUsuario`. No Smali, esqueça o luxo. Aqui trabalhamos com 'Registradores', que são como caixas numeradas onde você pode colocar qualquer coisa temporariamente. Imagine que você está em uma cozinha industrial (o processador) e tem apenas um número limitado de tigelas (registradores) na bancada. Para fazer um bolo, você coloca a farinha na tigela `v0`, o açúcar na `v1`, mistura e coloca o resultado de volta na `v0`. Existem duas nomenclaturas fundamentais: os registradores `v` (locais) e os `p` (parâmetros). O registrador `p0` é a tigela mais importante: em métodos comuns, ela contém o 'this' (a própria instância da classe). Se o método recebe dois números, eles estarão em `p1` e `p2`. No Brasil, gostamos de usar analogias de futebol: o `p0` é o capitão do time que sempre está em campo, enquanto os `v0, v1...` são os jogadores reservas que entram para realizar uma tarefa específica e depois saem. Aprender a gerenciar esses registradores sem 'sobrescrever' um dado importante por acidente é a habilidade mais crítica para qualquer editor de Smali. Se você tentar usar uma tigela que não declarou que ia usar (via `.locals`), a cozinha explode (o app crasha).",
+    intro: "No Java, você cria variáveis com nomes lindos como `int contador` ou `String nomeDoUsuario`. No Smali, esqueça o luxo dos nomes descritivos. Aqui trabalhamos com 'Registradores', que são como caixas numeradas onde você pode colocar qualquer coisa temporariamente — números, textos, objetos, referências. Imagine que você está em uma cozinha industrial (o processador ARM do celular) e tem apenas um número limitado de tigelas (registradores) na bancada. Para fazer um bolo, você coloca a farinha na tigela `v0`, o açúcar na `v1`, mistura e coloca o resultado de volta na `v0`. Se você tentar usar uma tigela que não existe na bancada, a cozinha explode (o app crasha com um VerifyError). Existem duas nomenclaturas fundamentais que você precisa gravar: os registradores `v` (locais, suas variáveis de trabalho) e os `p` (parâmetros, os ingredientes que alguém te entregou). O registrador `p0` é a tigela mais importante de todas: em métodos de instância (não-estáticos), ela contém o 'this' — a própria instância da classe, como se fosse o crachá de identidade do objeto. Se o método recebe dois números como argumento, eles estarão em `p1` e `p2`. No Brasil, gostamos de usar analogias de futebol: o `p0` é o capitão do time que sempre está em campo e nunca sai, enquanto os `v0, v1, v2...` são os jogadores reservas que entram para realizar uma tarefa específica (uma jogada ensaiada) e depois saem. A diretiva `.locals N` no topo do método é como o técnico dizendo quantos reservas ele vai precisar naquela partida. Aprender a gerenciar esses registradores sem 'sobrescrever' um dado importante por acidente é a habilidade mais crítica para qualquer editor de Smali — é a diferença entre um mod que funciona perfeitamente e um que crasha misteriosamente em momentos aleatórios. Quando você precisar adicionar código novo, lembre-se sempre de aumentar o valor de `.locals` para ter tigelas extras disponíveis na sua bancada de trabalho.",
     codes: [
       {
         lang: "smali",
@@ -152,6 +210,22 @@ export const chapters: Chapter[] = [
       {
         lang: "smali",
         code: "# 6. Retornando o resultado final\nreturn v0"
+      },
+      {
+        lang: "smali",
+        code: "# 7. Exemplo completo de método com registradores\n.method public static somar(II)I\n    .locals 1\n    # p0 = primeiro int, p1 = segundo int (método estático!)\n    add-int v0, p0, p1\n    return v0\n.end method"
+      },
+      {
+        lang: "smali",
+        code: "# 8. Registradores wide (Long/Double ocupam 2)\n.locals 4\nconst-wide v0, 0x174876E800L  # v0-v1 = 100000000000\nconst-wide v2, 0x2L            # v2-v3 = 2\nadd-long v0, v0, v2            # v0-v1 = resultado"
+      },
+      {
+        lang: "smali",
+        code: "# 9. Movendo objeto entre registradores\nmove-object v1, p0  # Copia referência do 'this' para v1\n# Útil quando p0 será sobrescrito mas você ainda precisa do this"
+      },
+      {
+        lang: "smali",
+        code: "# 10. Verificando o número de registradores necessários\n# .locals 3 = v0, v1, v2 disponíveis\n# Se método tem 2 params: p0=this, p1=arg1, p2=arg2\n# Total de registradores = .locals + params + 1"
       }
     ],
     points: [
@@ -164,7 +238,12 @@ export const chapters: Chapter[] = [
       "O número total de registradores é a soma de .locals + parâmetros + 1 (para p0).",
       "O ApkTool permite usar a nomenclatura '.registers N' para definir o total absoluto.",
       "Sobrescrever p0 geralmente causa erros de verificação (VerifyError).",
-      "Registradores não têm tipo fixo; você pode colocar um int em v0 e depois um objeto."
+      "Registradores não têm tipo fixo; você pode colocar um int em v0 e depois um objeto.",
+      "Registradores são espaços de 32 bits — tipos wide (long/double) usam 2 consecutivos.",
+      "A diretiva .registers N define o total absoluto (alternativa ao .locals).",
+      "Em métodos estáticos, p0 é o primeiro argumento (não existe 'this').",
+      "Sobrescrever p0 em método de instância causa VerifyError fatal.",
+      "O ApkTool usa .locals por padrão; .registers é mais comum em código gerado."
     ],
     alerts: [
       {
@@ -178,6 +257,14 @@ export const chapters: Chapter[] = [
       {
         type: "tip",
         content: "Ao adicionar código, sempre aumente o número em '.locals' para ter 'tigelas' extras livres."
+      },
+      {
+        type: "success",
+        content: "Se seu método compila sem VerifyError, os registradores estão corretos."
+      },
+      {
+        type: "danger",
+        content: "Usar um registrador além do limite de .locals causa crash imediato sem mensagem clara."
       }
     ]
   },
@@ -187,7 +274,7 @@ export const chapters: Chapter[] = [
     title: "Sistema de Tipos em Smali",
     difficulty: "intermediario",
     subtitle: "V, Z, I, L e a sopa de letras dos tipos Dalvik",
-    intro: "No Smali, economizar espaço é a regra de ouro. Em vez de escrever nomes completos de tipos como `Boolean`, `Integer` ou `Void`, a Máquina Virtual Dalvik usa uma taquigrafia de uma única letra. Pode parecer uma sopa de letrinhas confusa no começo, mas há uma lógica por trás. Por que o Booleano é `Z`? Porque o `B` já estava ocupado pelo `Byte`. Por que o `Long` é `J`? Porque o `L` é o prefixo universal para objetos (Classes). Imagine que você está mandando um telegrama e cada letra custa caro; você abrevia tudo. Um Inteiro é `I`, um Float é `F`. Quando chegamos aos objetos, a coisa muda: usamos um `L` no começo, o caminho completo da pasta separado por barras, e um `;` no final para dizer que o nome acabou. Por exemplo, uma String em Java é `Ljava/lang/String;` em Smali. E se for uma lista (array)? Basta colocar um colchete `[` na frente! Um array de inteiros vira `[I`. No Brasil, essa lógica é parecida com as siglas de estados ou aeroportos: `SP`, `RJ`, `GRU`, `GIG`. Uma vez que você decora os principais, a leitura do Smali flui naturalmente como se você estivesse lendo português.",
+    intro: "No Smali, economizar espaço é a regra de ouro — cada byte conta quando você está lidando com milhões de instruções dentro de um arquivo DEX. Em vez de escrever nomes completos de tipos como `Boolean`, `Integer` ou `Void`, a Máquina Virtual Dalvik usa uma taquigrafia de uma única letra que pode parecer uma sopa de letrinhas confusa no começo, mas que tem uma lógica interna consistente e elegante. Por que o Booleano é `Z`? Porque o `B` já estava ocupado pelo `Byte`. Por que o `Long` é `J`? Porque o `L` é o prefixo universal para objetos (Classes) e não podia ser reutilizado. Imagine que você está mandando um telegrama antigamente e cada letra custa caro; você abrevia tudo ao máximo para economizar. Um Inteiro é `I`, um Float é `F`, um Char é `C`, um Short é `S`. Quando chegamos aos objetos (classes completas), a coisa muda de figura: usamos um `L` no começo, o caminho completo do pacote separado por barras (não por pontos como no Java!), e um `;` no final para dizer que o nome acabou. Por exemplo, uma String em Java é `Ljava/lang/String;` em Smali. E se for uma lista (array)? Basta colocar um colchete `[` na frente! Um array de inteiros vira `[I`, um array de Strings vira `[Ljava/lang/String;`. No Brasil, essa lógica é parecida com as siglas de estados ou códigos de aeroportos: `SP`, `RJ`, `GRU`, `GIG` — parecem aleatórios para quem não conhece, mas uma vez que você decora os principais, a leitura se torna automática. Dominar o sistema de tipos é o pré-requisito para conseguir ler assinaturas de métodos no Smali, que é onde a maioria dos iniciantes trava. Sem entender que `(IZLjava/lang/String;)V` significa 'recebe um int, um boolean e uma String, retorna void', você ficará perdido em qualquer arquivo .smali que abrir.",
     codes: [
       {
         lang: "smali",
@@ -212,6 +299,22 @@ export const chapters: Chapter[] = [
       {
         lang: "smali",
         code: "# 6. Assinatura de um método complexo:\n# (IZLjava/lang/String;)V\n# Um método que recebe: (Int, Boolean, String) e retorna Void."
+      },
+      {
+        lang: "smali",
+        code: "# 7. Assinatura complexa de método real\n# (Landroid/content/Context;Ljava/lang/String;I)Ljava/util/List;\n# Recebe: Context, String, int\n# Retorna: List"
+      },
+      {
+        lang: "smali",
+        code: "# 8. Array multidimensional\n# [[I = int[][]\n# [[[Ljava/lang/String; = String[][][]\n# Cada [ adiciona uma dimensão ao array"
+      },
+      {
+        lang: "smali",
+        code: "# 9. Tipo void em retorno de método\n# ()V = método sem parâmetros que retorna void\n# (I)V = recebe um int, retorna void\n# ()Ljava/lang/String; = sem params, retorna String"
+      },
+      {
+        lang: "smali",
+        code: "# 10. Identificando tipos em uma chamada real\ninvoke-virtual {p0, v0, v1}, Lcom/app/DB;->save(Ljava/lang/String;I)Z\n# save(String, int) retorna boolean"
       }
     ],
     points: [
@@ -224,7 +327,12 @@ export const chapters: Chapter[] = [
       "Tipos de 64 bits (J e D) exigem o uso de dois registradores para armazenamento.",
       "Strings são tratadas como objetos (Ljava/lang/String;).",
       "A sintaxe de tipos é idêntica à usada na JNI (Java Native Interface).",
-      "Entender os tipos é crucial para localizar as assinaturas corretas dos métodos."
+      "Entender os tipos é crucial para localizar as assinaturas corretas dos métodos.",
+      "A tabela completa de tipos: V=void, Z=bool, B=byte, S=short, C=char, I=int, J=long, F=float, D=double.",
+      "Objetos sempre seguem o padrão Lpackage/Class; (com L no início e ; no final).",
+      "Arrays usam [ como prefixo: [I = int[], [[I = int[][], [Ljava/lang/String; = String[].",
+      "Assinaturas de método não usam separadores entre parâmetros: (IZLjava/lang/String;)V.",
+      "O tipo de retorno vem sempre após o ) de fechamento dos parâmetros."
     ],
     alerts: [
       {
@@ -238,6 +346,14 @@ export const chapters: Chapter[] = [
       {
         type: "tip",
         content: "Sempre que vir um 'L' seguido de caminhos com '/', você está olhando para uma classe."
+      },
+      {
+        type: "success",
+        content: "Se você identifica (IZ)V como 'recebe int e boolean, retorna void', dominou os tipos!"
+      },
+      {
+        type: "danger",
+        content: "Confundir J (long, 64-bit) com I (int, 32-bit) causa corrupção silenciosa de dados."
       }
     ]
   },
@@ -247,7 +363,7 @@ export const chapters: Chapter[] = [
     title: "Estrutura de um Método Smali",
     difficulty: "intermediario",
     subtitle: "Method, End Method, Modificadores e Invokes",
-    intro: "Um método no Smali é como uma receita de bolo contida dentro de um envelope lacrado. Ele começa com a diretiva `.method` e termina com `.end method`. No topo do envelope (a assinatura), temos informações vitais: quem pode ler (modificadores como `public`, `private`, `static`), o nome da receita e quais ingredientes ela precisa (parâmetros). Mas a parte mais importante para quem faz engenharia reversa são as 'invocações' (`invokes`). Como o Smali é uma linguagem de baixo nível, ele não simplesmente 'chama' uma função; ele precisa dizer como essa chamada deve ser feita. Se for uma função privada da mesma classe, usamos `invoke-direct`. Se for uma função comum de um objeto, usamos `invoke-virtual`. Se for uma função estática (que não precisa de um objeto criado), usamos `invoke-static`. É como se, no Brasil, tivéssemos formas diferentes de chamar alguém: 'Ô fulano!' (direto), 'Senhor fulano' (virtual) ou apenas gritar para a multidão (estático). Dominar a anatomia de um método permite que você encontre o 'coração' de uma funcionalidade e entenda como os dados entram, como são processados e como saem através do comando `return`.",
+    intro: "Um método no Smali é como uma receita de bolo contida dentro de um envelope lacrado. Ele começa com a diretiva `.method` e termina com `.end method` — tudo que está entre essas duas linhas é o corpo da receita, as instruções que o processador vai executar. No topo do envelope (a assinatura), temos informações vitais: quem pode ler (modificadores como `public`, `private`, `static`), o nome da receita e quais ingredientes ela precisa (parâmetros com seus tipos). É como a capa de um livro de receitas: antes de abrir, você já sabe se é um bolo de chocolate (método que retorna algo) ou apenas uma decoração (void). Mas a parte mais importante para quem faz engenharia reversa são as 'invocações' (`invokes`). Como o Smali é uma linguagem de baixo nível, ele não simplesmente 'chama' uma função como no Java com um simples `objeto.metodo()`; ele precisa dizer explicitamente como essa chamada deve ser feita, qual o protocolo de comunicação. Se for uma função privada da mesma classe ou um construtor, usamos `invoke-direct` — é uma ligação direta, sem intermediários. Se for uma função comum de um objeto que pode ser sobrescrita por herança, usamos `invoke-virtual` — o sistema precisa verificar se existe uma versão mais específica na classe filha. Se for uma função estática (que não precisa de um objeto criado), usamos `invoke-static` — é como ligar para um número 0800, não precisa saber quem vai atender. É como se, no Brasil, tivéssemos formas diferentes de chamar alguém dependendo do contexto: 'Ô fulano!' no bar (direto), 'Senhor Doutor' no tribunal (virtual, com cerimônia) ou gritar 'Próximo!' na fila do banco (estático, qualquer um serve). Dominar a anatomia de um método permite que você encontre o 'coração' de uma funcionalidade e entenda como os dados entram, como são processados e como saem através do comando `return`.",
     codes: [
       {
         lang: "smali",
@@ -272,6 +388,22 @@ export const chapters: Chapter[] = [
       {
         lang: "smali",
         code: "# 6. Finalizando o método com retorno vazio\nreturn-void\n.end method"
+      },
+      {
+        lang: "smali",
+        code: "# 7. Método com try-catch (tratamento de exceção)\n.method public getData()V\n    .locals 2\n    :try_start\n    invoke-virtual {p0}, Lcom/app/Net;->fetch()V\n    :try_end\n    .catch Ljava/lang/Exception; {:try_start .. :try_end} :catch_0\n    return-void\n    :catch_0\n    move-exception v0\n    return-void\n.end method"
+      },
+      {
+        lang: "smali",
+        code: "# 8. Invoke-interface (para interfaces Java)\ninvoke-interface {v0}, Ljava/util/List;->size()I\nmove-result v1\n# Usado quando o tipo declarado é uma interface"
+      },
+      {
+        lang: "smali",
+        code: "# 9. Invoke com range (mais de 5 argumentos)\ninvoke-virtual/range {v0 .. v6}, Lcom/app/X;->metodo(IIIIIII)V\n# Quando há mais de 5 registradores como argumento"
+      },
+      {
+        lang: "smali",
+        code: "# 10. Desativando um método inteiro (patch comum)\n.method public isPremium()Z\n    .locals 1\n    const/4 v0, 0x1  # Sempre retorna true\n    return v0\n.end method"
       }
     ],
     points: [
@@ -284,7 +416,12 @@ export const chapters: Chapter[] = [
       "'invoke-direct' é obrigatório para construtores (<init>) e métodos privados.",
       "'invoke-static' não requer uma instância de classe para ser executado.",
       "O resultado de uma chamada de método DEVE ser capturado por 'move-result' na linha seguinte.",
-      "Métodos podem conter 'anotações' que descrevem comportamentos extras (como @Override)."
+      "Métodos podem conter 'anotações' que descrevem comportamentos extras (como @Override).",
+      "invoke-virtual: métodos de instância que podem ser sobrescritos (polimorfismo).",
+      "invoke-direct: construtores (<init>) e métodos private (sem polimorfismo).",
+      "invoke-static: métodos de classe que não precisam de instância.",
+      "invoke-interface: quando o tipo declarado é uma interface (List, Map, etc.).",
+      "invoke-super: chama a implementação da classe pai (usado em @Override)."
     ],
     alerts: [
       {
@@ -298,6 +435,14 @@ export const chapters: Chapter[] = [
       {
         type: "tip",
         content: "Para desativar uma função, você pode simplesmente inserir um 'return-void' logo no início dela."
+      },
+      {
+        type: "success",
+        content: "Se você sabe quando usar invoke-virtual vs invoke-direct, pode modificar qualquer chamada."
+      },
+      {
+        type: "danger",
+        content: "Usar invoke-virtual em método private causa VerifyError. Private sempre usa invoke-direct."
       }
     ]
   },
@@ -307,7 +452,7 @@ export const chapters: Chapter[] = [
     title: "Instruções Smali Essenciais",
     difficulty: "intermediario",
     subtitle: "Move, Const, Iget, Iput e saltos condicionais",
-    intro: "Agora que conhecemos os tipos e os métodos, vamos aprender os verbos: as instruções. No Smali, cada comando faz apenas uma coisa muito simples. Quer colocar um número numa caixa? Use `const`. Quer passar o que está na caixa A para a caixa B? Use `move`. Quer ler uma variável que está dentro de um objeto? Use `iget` (Instance Get). Quer mudar o valor dessa variável? Use `iput` (Instance Put). Mas a verdadeira inteligência de um app está nas decisões, e no Smali elas são feitas através de 'pulos' (jumps). O comando `if-eq v0, v1, :label` diz: 'Se v0 for igual a v1, pule para o lugar marcado como :label'. Se não for igual, o código continua na linha de baixo. É como um livro de 'escolha seu próprio caminho' que você lia quando criança. No Brasil, chamamos isso de 'fluxograma': se tem dinheiro, vai pro shopping; se não tem, fica em casa. Dominar essas instruções básicas é o que permite que você altere o fluxo de um aplicativo, fazendo com que ele pule uma verificação de pagamento ou ignore um erro de conexão, redirecionando o fluxo para onde você desejar.",
+    intro: "Agora que conhecemos os tipos e os métodos, vamos aprender os verbos da linguagem: as instruções. No Smali, cada comando faz apenas uma coisa muito simples — não existe instrução que faça duas operações ao mesmo tempo. É como uma linha de montagem de fábrica onde cada operário faz um único movimento repetitivo. Quer colocar um número numa caixa? Use `const`. Quer passar o que está na caixa A para a caixa B? Use `move`. Quer ler uma variável que está dentro de um objeto? Use `iget` (Instance Get). Quer mudar o valor dessa variável? Use `iput` (Instance Put). Quer ler um campo estático da classe? Use `sget`. Cada instrução tem variantes para diferentes tipos de dados: `iget` para inteiros, `iget-object` para objetos, `iget-wide` para longs e doubles. Mas a verdadeira inteligência de um app está nas decisões — os momentos onde o código escolhe um caminho ou outro — e no Smali elas são feitas através de 'pulos' (jumps/branches). O comando `if-eq v0, v1, :label` diz: 'Se v0 for igual a v1, pule para o lugar marcado como :label'. Se não for igual, o código continua na linha de baixo como se nada tivesse acontecido. É como um livro de 'escolha seu próprio caminho' que você lia quando criança: 'Se quiser abrir a porta, vá para a página 42; se quiser fugir, continue lendo'. No Brasil, chamamos isso de 'fluxograma' ou 'encruzilhada': se tem dinheiro no Pix, vai pro shopping; se não tem, fica em casa assistindo Netflix. Dominar essas instruções básicas é o que permite que você altere o fluxo de um aplicativo de forma cirúrgica, fazendo com que ele pule uma verificação de pagamento, ignore um erro de conexão, ou aceite qualquer senha como válida — tudo mudando apenas uma ou duas linhas de código. É o poder absoluto sobre o comportamento do aplicativo, concentrado em instruções simples que qualquer pessoa pode aprender com prática e dedicação.",
     codes: [
       {
         lang: "smali",
@@ -332,6 +477,22 @@ export const chapters: Chapter[] = [
       {
         lang: "smali",
         code: "# 6. Criando uma nova instância (New)\nnew-instance v0, Ljava/lang/StringBuilder;\ninvoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V"
+      },
+      {
+        lang: "smali",
+        code: "# 7. Switch/case em Smali (packed-switch)\npacked-switch v0, :pswitch_data\n:pswitch_0\nconst-string v1, \"caso 0\"\ngoto :end\n:pswitch_1\nconst-string v1, \"caso 1\"\n:end"
+      },
+      {
+        lang: "smali",
+        code: "# 8. Operações com arrays\nnew-array v0, v1, [I          # Cria array de int com tamanho v1\naput v2, v0, v3               # array[v3] = v2\naget v4, v0, v3               # v4 = array[v3]"
+      },
+      {
+        lang: "smali",
+        code: "# 9. Casting de tipos (check-cast)\ncheck-cast v0, Landroid/widget/TextView;\n# Garante que v0 é um TextView antes de usar\n# Se não for, lança ClassCastException"
+      },
+      {
+        lang: "smali",
+        code: "# 10. Operação de negação (inverter boolean)\nif-eqz v0, :was_false\nconst/4 v0, 0x0\ngoto :done\n:was_false\nconst/4 v0, 0x1\n:done\n# Inverte: se era true vira false e vice-versa"
       }
     ],
     points: [
@@ -344,7 +505,12 @@ export const chapters: Chapter[] = [
       "Instruções 'array-length' retornam o tamanho de uma lista.",
       "Instruções de retorno devem bater com o tipo do método (return, return-object, return-void).",
       "O mnemônico 'nop' (No Operation) não faz nada, usado para preenchimento.",
-      "Labels (etiquetas) começam com ':' e servem de destino para pulos."
+      "Labels (etiquetas) começam com ':' e servem de destino para pulos.",
+      "const/4 suporta valores de -8 a 7; const/16 suporta -32768 a 32767.",
+      "iget/iput são para campos de instância; sget/sput para campos estáticos.",
+      "if-eqz/if-nez comparam com zero; if-eq/if-ne comparam dois registradores.",
+      "goto faz salto incondicional; é usado para implementar loops e else.",
+      "Labels (:nome) são locais ao método — não podem ser referenciadas de fora."
     ],
     alerts: [
       {
@@ -358,6 +524,14 @@ export const chapters: Chapter[] = [
       {
         type: "info",
         content: "Os pulos são locais ao método; você não pode pular de um arquivo Smali para outro diretamente."
+      },
+      {
+        type: "success",
+        content: "Se você consegue inverter um if-eqz para if-nez e o app muda de comportamento, está dominando!"
+      },
+      {
+        type: "danger",
+        content: "Loops infinitos (goto sem condição de saída) congelam o app e podem exigir force-stop."
       }
     ]
   },
@@ -367,7 +541,7 @@ export const chapters: Chapter[] = [
     title: "Lendo Logcat para Entender o Smali",
     difficulty: "intermediario",
     subtitle: "Adb logcat, filtros e rastreamento de crashes",
-    intro: "Imagine que você é um detetive tentando desvendar um crime em uma cidade barulhenta. O Logcat é o sistema de câmeras de segurança e microfones da cidade (o Android). Absolutamente tudo o que o aplicativo faz — desde um simples clique até um erro fatal — deixa um rastro no Logcat. Quando você está editando um Smali, o Logcat é o seu melhor amigo e seu mestre. Se o aplicativo fechar sozinho, não entre em pânico: o Logcat te dará um 'Stack Trace', que é basicamente o mapa do tesouro dizendo: 'O erro aconteceu no arquivo X.smali, dentro do método Y, na linha Z'. No Brasil, temos o hábito de dizer que 'quem não deve não teme'; o app 'deve' explicações ao sistema, e o Logcat as entrega de bandeja. Aprender a filtrar esse mar de informações com o comando `adb logcat` é essencial. Você pode focar apenas nos erros do seu app, ignorando as notificações chatas do sistema, e descobrir exatamente qual instrução Smali você escreveu errado ou qual registrador você esqueceu de declarar. Sem o Logcat, você está voando às cegas; com ele, você tem visão de raio-x sobre a execução do código.",
+    intro: "Imagine que você é um detetive tentando desvendar um crime em uma cidade barulhenta com milhões de habitantes. O Logcat é o sistema de câmeras de segurança e microfones da cidade (o Android) — ele grava absolutamente tudo que acontece, 24 horas por dia, sem parar. Absolutamente tudo o que o aplicativo faz — desde um simples clique em um botão até um erro fatal que derruba o app — deixa um rastro no Logcat. Quando você está editando um Smali e algo dá errado, o Logcat é o seu melhor amigo, seu mestre e seu oráculo. Se o aplicativo fechar sozinho (o famoso 'Force Close'), não entre em pânico e não saia mudando código aleatoriamente: o Logcat te dará um 'Stack Trace', que é basicamente o mapa do tesouro dizendo: 'O erro aconteceu no arquivo X.smali, dentro do método Y, na linha Z, porque você tentou fazer W com um registrador nulo'. No Brasil, temos o hábito de dizer que 'quem não deve não teme'; o app 'deve' explicações ao sistema operacional, e o Logcat as entrega de bandeja para quem souber ler. Aprender a filtrar esse mar de informações com o comando `adb logcat` é essencial para não se afogar em milhares de linhas irrelevantes. Você pode focar apenas nos erros do seu app específico (filtrando pelo package name), ignorando as notificações chatas do sistema, os logs do Wi-Fi, do Bluetooth e de outros 200 processos que rodam em paralelo. Com os filtros certos, você descobre exatamente qual instrução Smali você escreveu errado, qual registrador você esqueceu de declarar no `.locals`, ou qual método você chamou com os parâmetros na ordem trocada. Sem o Logcat, você está voando às cegas num avião sem instrumentos; com ele, você tem visão de raio-X sobre cada milissegundo da execução do código.",
     codes: [
       {
         lang: "bash",
@@ -392,6 +566,22 @@ export const chapters: Chapter[] = [
       {
         lang: "bash",
         code: "# 6. Salvando o log em um arquivo para análise calma:\nadb logcat -d > meu_erro.txt"
+      },
+      {
+        lang: "bash",
+        code: "# 7. Filtrando log por PID do app específico\nPID=$(adb shell pidof com.exemplo.app)\nadb logcat --pid=$PID\n# Mostra apenas logs do processo do seu app"
+      },
+      {
+        lang: "bash",
+        code: "# 8. Buscando crashes recentes no logcat\nadb logcat -d | grep -A 20 'FATAL EXCEPTION'\n# Mostra o stack trace completo do último crash"
+      },
+      {
+        lang: "bash",
+        code: "# 9. Monitorando em tempo real com cores\nadb logcat -v color *:W\n# Mostra apenas Warnings e Errors com destaque colorido"
+      },
+      {
+        lang: "bash",
+        code: "# 10. Exportando log formatado para análise\nadb logcat -d -v threadtime > crash_$(date +%Y%m%d_%H%M%S).log\n# Salva com timestamp no nome para organização"
       }
     ],
     points: [
@@ -404,7 +594,12 @@ export const chapters: Chapter[] = [
       "Filtrar por 'package name' ajuda a isolar as mensagens do seu aplicativo alvo.",
       "É possível ler o Logcat diretamente no dispositivo usando apps como MatLog (requer root).",
       "O Logcat revela valores de variáveis que o desenvolvedor imprimiu para debug.",
-      "Monitorar o Logcat durante a inicialização do app ajuda a identificar proteções anti-tamper."
+      "Monitorar o Logcat durante a inicialização do app ajuda a identificar proteções anti-tamper.",
+      "O nível E (Error) no Logcat indica crashes e exceções não tratadas.",
+      "VerifyError significa que o Smali tem erro de sintaxe ou tipos incompatíveis.",
+      "NullPointerException indica que você usou um registrador que contém null.",
+      "ClassNotFoundException significa que uma classe referenciada não existe no APK.",
+      "O filtro -s TAG mostra apenas logs com a tag específica, ignorando todo o resto."
     ],
     alerts: [
       {
@@ -418,6 +613,14 @@ export const chapters: Chapter[] = [
       {
         type: "warning",
         content: "Muitos logs podem deixar o terminal lento; use filtros para reduzir o fluxo de dados."
+      },
+      {
+        type: "success",
+        content: "Se você encontra 'Caused by:' no logcat e identifica a classe/método, está debugando como profissional."
+      },
+      {
+        type: "danger",
+        content: "Logs excessivos em loops podem gerar gigabytes de dados e travar o dispositivo."
       }
     ]
   },
@@ -427,7 +630,7 @@ export const chapters: Chapter[] = [
     title: "Adicionando Logs no Smali para Debug",
     difficulty: "intermediario",
     subtitle: "Injeção de código, Log.d e técnica de bisect",
-    intro: "Sabe quando você perde a chave de casa no escuro e precisa de uma lanterna para iluminar o caminho? Injetar logs no Smali é exatamente isso: você está colocando 'lanternas' dentro do código para ver o que está acontecendo em tempo real. Como não temos o código original para usar um depurador visual moderno, nós fazemos a 'depuração de guerrilha'. Se você quer saber o que está escrito no registrador `v0` antes dele ser enviado para o servidor, você injeta uma chamada para a classe `android.util.Log`. Isso fará com que o valor de `v0` apareça magicamente no seu Logcat. É uma técnica poderosa: você pode ver senhas, tokens de API, ou simplesmente confirmar se o código passou por um determinado `IF`. No Brasil, somos mestres em improvisação, e a injeção de logs é o ápice disso na engenharia reversa. Outra técnica vital é o 'Bisect': se o app está crashando e você não sabe onde, você coloca um log no meio do método. Se o log aparecer, o erro está depois dele; se não aparecer, o erro está antes. Assim, você vai fechando o cerco até encontrar o vilão. É um trabalho de paciência, mas que entrega resultados que nenhuma ferramenta automática conseguiria.",
+    intro: "Sabe quando você perde a chave de casa no escuro e precisa de uma lanterna para iluminar o caminho? Injetar logs no Smali é exatamente isso: você está colocando 'lanternas' estratégicas dentro do código para ver o que está acontecendo em tempo real, iluminando os cantos escuros que nenhuma ferramenta automática consegue alcançar. Como não temos o código fonte original para usar um depurador visual moderno com breakpoints bonitinhos, nós fazemos a 'depuração de guerrilha' — o método artesanal que funciona em qualquer situação. Se você quer saber o que está escrito no registrador `v0` antes dele ser enviado para o servidor, você injeta uma chamada para a classe `android.util.Log`. Isso fará com que o valor de `v0` apareça magicamente no seu Logcat, como se o app estivesse confessando seus segredos para você. É uma técnica poderosa e versátil: você pode ver senhas em texto plano, tokens de API, URLs ocultas, ou simplesmente confirmar se o código passou por um determinado `IF` ou tomou o caminho alternativo. No Brasil, somos mestres em improvisação e gambiarra criativa, e a injeção de logs é o ápice disso na engenharia reversa — é simples, é eficaz e não precisa de nenhuma ferramenta cara ou setup complicado. Outra técnica vital que todo modder precisa dominar é o 'Bisect' (busca binária de bugs): se o app está crashando e você não sabe onde exatamente o problema está num método com 200 linhas, você coloca um log no meio. Se o log aparecer no Logcat, o erro está depois dele; se não aparecer, o erro está antes. Assim, você vai fechando o cerco pela metade a cada teste até encontrar o vilão em poucas tentativas. É um trabalho de paciência e método científico, mas que entrega resultados precisos que nenhuma ferramenta automática de análise estática conseguiria.",
     codes: [
       {
         lang: "smali",
@@ -452,6 +655,22 @@ export const chapters: Chapter[] = [
       {
         lang: "smali",
         code: "# 6. Verificando o resultado no terminal:\nadb logcat -s MEU_MOD"
+      },
+      {
+        lang: "smali",
+        code: "# 7. Logando um boolean (convertendo para String)\ninvoke-static {v0}, Ljava/lang/Boolean;->toString(Z)Ljava/lang/String;\nmove-result-object v1\ninvoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I"
+      },
+      {
+        lang: "smali",
+        code: "# 8. Logando o nome da classe atual\ninvoke-virtual {p0}, Ljava/lang/Object;->getClass()Ljava/lang/Class;\nmove-result-object v1\ninvoke-virtual {v1}, Ljava/lang/Class;->getName()Ljava/lang/String;\nmove-result-object v1\ninvoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I"
+      },
+      {
+        lang: "smali",
+        code: "# 9. Marcando pontos de passagem com logs numerados\nconst-string v0, \"DEBUG\"\nconst-string v1, \">>> CHECKPOINT 1 <<<\"\ninvoke-static {v0, v1}, Landroid/util/Log;->e(Ljava/lang/String;Ljava/lang/String;)I"
+      },
+      {
+        lang: "smali",
+        code: "# 10. Logando o conteúdo de um Bundle (Intent extras)\ninvoke-virtual {p1}, Landroid/os/Bundle;->toString()Ljava/lang/String;\nmove-result-object v1\ninvoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I"
       }
     ],
     points: [
@@ -464,7 +683,12 @@ export const chapters: Chapter[] = [
       "Injetar uma Exception falsa permite ver o caminho que o código percorreu (Stack Trace).",
       "Remova todos os logs de debug antes de finalizar e distribuir sua modificação.",
       "Use TAGs únicas e fáceis de filtrar para não se perder no Logcat.",
-      "Logs podem ser injetados em qualquer lugar, inclusive dentro de loops ou condicionais."
+      "Logs podem ser injetados em qualquer lugar, inclusive dentro de loops ou condicionais.",
+      "Sempre aumente .locals antes de adicionar registradores para seus logs.",
+      "Use tags únicas (MEU_MOD_v2) para filtrar facilmente no logcat.",
+      "Log.e() aparece em vermelho no logcat — mais fácil de encontrar visualmente.",
+      "Remova TODOS os logs antes de distribuir o mod final (performance + segurança).",
+      "A técnica de bisect reduz o espaço de busca pela metade a cada iteração."
     ],
     alerts: [
       {
@@ -478,6 +702,14 @@ export const chapters: Chapter[] = [
       {
         type: "tip",
         content: "Use um editor com 'snippets' para injetar logs rapidamente com apenas um atalho de teclado."
+      },
+      {
+        type: "success",
+        content: "Se seu log aparece no logcat com a tag correta, a injeção de código está funcionando!"
+      },
+      {
+        type: "danger",
+        content: "Deixar logs com Log.d em produção pode vazar senhas e tokens para qualquer app que leia o logcat."
       }
     ]
   }

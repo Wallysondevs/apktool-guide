@@ -32,6 +32,22 @@ export const chapters: Chapter[] = [
       {
         lang: "bash",
         code: "# O comando para fechar a 'mala' após fazer suas alterações\napktool b meu_app # 'b' vem de build (construir/montar)\n# Ele tenta transformar sua pasta de volta em um arquivo .apk usável"
+      },
+      {
+        lang: "bash",
+        code: "# Verificando a estrutura interna de um APK sem decodificar\nunzip -l meu_app.apk | head -20\n# Mostra os arquivos dentro do APK como se fosse um ZIP comum"
+      },
+      {
+        lang: "bash",
+        code: "# Comparando o tamanho antes e depois da decompilação\ndu -sh meu_app.apk meu_app/\n# A pasta decompilada costuma ser 3-5x maior que o APK original"
+      },
+      {
+        lang: "bash",
+        code: "# Buscando textos específicos dentro do app decompilado\ngrep -r \"senha\\|password\\|token\" meu_app/res/values/\n# Procura por strings sensíveis nos recursos do aplicativo"
+      },
+      {
+        lang: "bash",
+        code: "# Contando quantos arquivos Smali (classes) o app possui\nfind meu_app/smali -name '*.smali' | wc -l\n# Apps grandes podem ter milhares de classes para explorar"
       }
     ],
     points: [
@@ -44,7 +60,12 @@ export const chapters: Chapter[] = [
       "Ajuda desenvolvedores a entenderem como grandes apps implementam certas funções.",
       "Funciona através da linha de comando, permitindo automação de tarefas repetitivas.",
       "Mantém a estrutura original do projeto Android, facilitando a navegação interna.",
-      "É gratuito, de código aberto e mantido por uma comunidade global ativa."
+      "É gratuito, de código aberto e mantido por uma comunidade global ativa.",
+      "O ApkTool não requer ROOT no dispositivo Android para funcionar.",
+      "Suporta APKs de qualquer versão do Android, desde a 1.0 até a mais recente.",
+      "A comunidade XDA Developers é o maior fórum de discussão sobre uso do ApkTool.",
+      "Pode ser integrado em scripts Bash/Python para análise automatizada em massa.",
+      "Diferente de descompiladores como JADX, o ApkTool permite recompilar o app de volta."
     ],
     alerts: [
       {
@@ -58,6 +79,14 @@ export const chapters: Chapter[] = [
       {
         type: "warning",
         content: "Não se assuste com o Smali; ele parece grego no início, mas logo você falará fluentemente."
+      },
+      {
+        type: "success",
+        content: "Se o comando 'apktool d' rodou sem erros e criou uma pasta, parabéns — você já fez sua primeira engenharia reversa!"
+      },
+      {
+        type: "danger",
+        content: "Nunca distribua APKs modificados de apps pagos. Isso é pirataria e pode ter consequências legais sérias."
       }
     ]
   },
@@ -92,6 +121,22 @@ export const chapters: Chapter[] = [
       {
         lang: "bash",
         code: "# Comparando o tamanho do original vs o decompilado\ndu -sh meu_app.apk meu_app/ # Mostra o espaço em disco de ambos\n# A pasta decompilada é sempre maior porque o código foi expandido."
+      },
+      {
+        lang: "bash",
+        code: "# Listando todas as Activities (telas) declaradas no app\ngrep -i 'activity' meu_app/AndroidManifest.xml\n# Cada <activity> é uma tela que o usuário pode ver ou interagir"
+      },
+      {
+        lang: "bash",
+        code: "# Procurando por URLs e endpoints de API no código\ngrep -rn 'https://' meu_app/smali/ | head -15\n# Revela servidores com os quais o app se comunica secretamente"
+      },
+      {
+        lang: "bash",
+        code: "# Usando JADX para obter uma visão em Java (complementar ao ApkTool)\njadx -d output_java/ meu_app.apk\n# Gera código Java aproximado para leitura mais fácil"
+      },
+      {
+        lang: "bash",
+        code: "# Extraindo apenas os recursos sem tocar no código Smali\napktool d --no-src meu_app.apk -o apenas_recursos/\n# Útil quando você só quer ver imagens, layouts e strings"
       }
     ],
     points: [
@@ -104,7 +149,12 @@ export const chapters: Chapter[] = [
       "Ajuda na recuperação de código-fonte perdido de projetos antigos.",
       "Revela vulnerabilidades que passariam despercebidas em testes de caixa-preta.",
       "É amplamente utilizada para 'cracking' de proteção, embora este livro foque no uso ético.",
-      "Desenvolve um entendimento profundo da arquitetura interna do sistema Android."
+      "Desenvolve um entendimento profundo da arquitetura interna do sistema Android.",
+      "O bytecode Dalvik é mais fácil de reverter que código nativo ARM compilado.",
+      "Ferramentas como Frida permitem análise dinâmica em tempo real sem modificar o APK.",
+      "Bug bounty programs pagam até R$50.000+ por vulnerabilidades encontradas via ER.",
+      "A combinação de análise estática (ApkTool) + dinâmica (Frida) é o padrão ouro.",
+      "Universidades brasileiras como USP e UNICAMP já incluem ER em suas grades."
     ],
     alerts: [
       {
@@ -118,6 +168,14 @@ export const chapters: Chapter[] = [
       {
         type: "warning",
         content: "Alguns aplicativos usam 'obfuscação', tornando o código uma sopa de letras difícil de ler."
+      },
+      {
+        type: "success",
+        content: "Se você consegue ler um AndroidManifest.xml decompilado e entender as permissões, já está fazendo ER!"
+      },
+      {
+        type: "danger",
+        content: "Nunca use ER para burlar proteções de DRM ou distribuir apps pagos gratuitamente."
       }
     ]
   },
@@ -152,6 +210,22 @@ export const chapters: Chapter[] = [
       {
         lang: "bash",
         code: "# Verificando a presença de certificados de segurança (SSL Pinning)\ngrep -r \"checkServerTrusted\" smali/ # Busca por validação de certificados\n# Entender como o app se protege contra ataques 'Man-in-the-Middle'."
+      },
+      {
+        lang: "bash",
+        code: "# Verificando se o app coleta identificadores únicos do dispositivo\ngrep -r \"getDeviceId\\|ANDROID_ID\\|getImei\" smali/\n# Coleta de IMEI sem consentimento viola a LGPD no Brasil"
+      },
+      {
+        lang: "bash",
+        code: "# Listando todas as permissões perigosas declaradas\ngrep 'uses-permission' AndroidManifest.xml | grep -i 'CAMERA\\|LOCATION\\|CONTACTS\\|RECORD_AUDIO'\n# Permissões sensíveis devem ter justificativa clara para o usuário"
+      },
+      {
+        lang: "bash",
+        code: "# Gerando um relatório de segurança básico com MobSF (ferramenta automatizada)\nmobsf -s meu_app.apk -o relatorio.pdf\n# Ferramentas automatizadas ajudam a documentar achados de forma profissional"
+      },
+      {
+        lang: "bash",
+        code: "# Verificando se o app envia dados para servidores fora do Brasil\ngrep -r 'amazonaws\\|firebase\\|analytics' smali/ | grep -v '.smali:    #'\n# Transferência internacional de dados tem regras específicas na LGPD"
       }
     ],
     points: [
@@ -164,7 +238,12 @@ export const chapters: Chapter[] = [
       "CVSS é a métrica usada para classificar a seriedade de falhas encontradas.",
       "Sempre leia os Termos de Uso (EULA), embora cláusulas que proíbam estudo possam ser abusivas.",
       "O conhecimento adquirido deve ser usado para fortalecer o ecossistema de software.",
-      "Respeite o trabalho alheio: não redistribua apps modificados sem autorização."
+      "Respeite o trabalho alheio: não redistribua apps modificados sem autorização.",
+      "Programas de Bug Bounty como HackerOne e Bugcrowd pagam por vulnerabilidades reportadas.",
+      "A Lei 9.609/98 (Lei do Software) permite ER para fins de estudo e interoperabilidade.",
+      "Empresas como Google, Samsung e Nubank possuem programas de recompensa por bugs.",
+      "Documentar suas descobertas com screenshots e logs é essencial para relatórios profissionais.",
+      "A comunidade OWASP Mobile mantém um guia de boas práticas para testes de segurança em apps."
     ],
     alerts: [
       {
@@ -178,6 +257,14 @@ export const chapters: Chapter[] = [
       {
         type: "info",
         content: "Este material tem fins estritamente educacionais e de pesquisa de segurança."
+      },
+      {
+        type: "warning",
+        content: "Mesmo para fins de estudo, evite publicar chaves de API ou dados pessoais encontrados durante a análise."
+      },
+      {
+        type: "tip",
+        content: "Crie um 'lab' isolado com emulador Android para praticar sem riscos em apps reais de produção."
       }
     ]
   },
@@ -212,6 +299,22 @@ export const chapters: Chapter[] = [
       {
         lang: "bash",
         code: "# Limpando a tela para focar no problema atual\nclear # Remove a 'sujeira' visual do terminal\n# Mente limpa, código claro."
+      },
+      {
+        lang: "bash",
+        code: "# Usando grep recursivo para encontrar qualquer texto em um projeto\ngrep -rn 'texto_procurado' pasta_do_app/\n# O -n mostra o número da linha, essencial para localizar rapidamente"
+      },
+      {
+        lang: "bash",
+        code: "# Criando aliases para comandos frequentes no ~/.bashrc\nalias apkd='apktool d'\nalias apkb='apktool b'\n# Economiza digitação e reduz erros de typo"
+      },
+      {
+        lang: "bash",
+        code: "# Usando find para localizar arquivos por extensão\nfind meu_app/ -name '*.xml' | head -10\n# Encontra todos os XMLs dentro da pasta decompilada"
+      },
+      {
+        lang: "bash",
+        code: "# Verificando diferenças entre duas versões de um arquivo\ndiff original.smali modificado.smali\n# Mostra exatamente o que você mudou, linha por linha"
       }
     ],
     points: [
@@ -224,7 +327,12 @@ export const chapters: Chapter[] = [
       "Curiosidade técnica: o desejo de saber 'por que' algo funciona é o seu motor.",
       "Gestão de frustração: aceitar que nem todo app pode ser facilmente aberto.",
       "Inglês técnico básico: a maioria das ferramentas e erros está em inglês.",
-      "Mentalidade de Backup: nunca trabalhe na sua única cópia de um arquivo."
+      "Mentalidade de Backup: nunca trabalhe na sua única cópia de um arquivo.",
+      "Aprenda a usar grep e find — são seus melhores amigos para navegar código desconhecido.",
+      "Mantenha um caderno de anotações (digital ou físico) com padrões que você descobre.",
+      "Comece com apps simples e pequenos antes de tentar reverter apps de grandes empresas.",
+      "A técnica de 'dividir para conquistar' funciona: isole um problema de cada vez.",
+      "Participe de comunidades como XDA, Reddit r/ReverseEngineering e fóruns brasileiros."
     ],
     alerts: [
       {
@@ -238,6 +346,14 @@ export const chapters: Chapter[] = [
       {
         type: "warning",
         content: "A pressa é a maior inimiga do analista. Um passo de cada vez evita bugs impossíveis de rastrear."
+      },
+      {
+        type: "success",
+        content: "Se você consegue navegar por pastas no terminal e abrir arquivos com cat/nano, já tem a base necessária."
+      },
+      {
+        type: "danger",
+        content: "Nunca edite o APK original diretamente. Sempre trabalhe em cópias para poder recomeçar do zero."
       }
     ]
   },
@@ -272,6 +388,22 @@ export const chapters: Chapter[] = [
       {
         lang: "bash",
         code: "# Testando se o editor de texto pode ser chamado via terminal\ncode --version # Testa o VS Code (opcional, mas recomendado)\n# Chamar o editor pelo terminal agiliza muito o fluxo de trabalho."
+      },
+      {
+        lang: "bash",
+        code: "# Instalando o ApkTool via wrapper script (Linux/Mac)\nwget https://raw.githubusercontent.com/AntBranch/apktool/master/scripts/linux/apktool\nchmod +x apktool && sudo mv apktool /usr/local/bin/\n# Agora o comando 'apktool' funciona de qualquer pasta"
+      },
+      {
+        lang: "bash",
+        code: "# Verificando se o zipalign está disponível no PATH\nzipalign --help 2>&1 | head -3\n# Faz parte do Android SDK Build Tools"
+      },
+      {
+        lang: "bash",
+        code: "# Testando o apksigner (assinatura digital)\napksigner --help 2>&1 | head -5\n# Sem assinatura, o Android se recusa a instalar qualquer APK"
+      },
+      {
+        lang: "bash",
+        code: "# Criando a pasta de trabalho organizada\nmkdir -p ~/android-re/{apks,tools,output,keys}\n# Organização é fundamental quando você trabalha com múltiplos apps"
       }
     ],
     points: [
@@ -284,7 +416,12 @@ export const chapters: Chapter[] = [
       "Apksigner: essencial para aplicar a assinatura digital após a modificação.",
       "Terminal (Bash, PowerShell ou CMD): onde a mágica dos comandos acontece.",
       "Frameworks Android: o ApkTool precisa dos arquivos de sistema para entender o app.",
-      "Uber-APK-Signer: uma ferramenta que facilita muito o processo de assinatura."
+      "Uber-APK-Signer: uma ferramenta que facilita muito o processo de assinatura.",
+      "Frida: framework de instrumentação dinâmica para análise em tempo real.",
+      "Ghidra/IDA: descompiladores de código nativo (para libs .so em C/C++).",
+      "Charles Proxy ou Burp Suite: interceptadores de tráfego de rede HTTPS.",
+      "Um dispositivo Android real ou emulador (Genymotion/AVD) para testes práticos.",
+      "Git: controle de versão para rastrear suas modificações no código Smali."
     ],
     alerts: [
       {
@@ -298,6 +435,14 @@ export const chapters: Chapter[] = [
       {
         type: "warning",
         content: "Versões muito antigas do Java podem causar erros misteriosos no ApkTool. Use versões modernas (11 ou 17)."
+      },
+      {
+        type: "success",
+        content: "Se java -version, apktool -version e adb version retornam sem erro, seu ambiente está pronto!"
+      },
+      {
+        type: "danger",
+        content: "Cuidado com downloads de ferramentas de fontes não oficiais — podem conter malware disfarçado."
       }
     ]
   }
